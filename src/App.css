@@ -1,3 +1,5 @@
+
+
 .characters {
   display: flex;
   flex-direction: row;
@@ -13,9 +15,11 @@
 }
 
 .characters img {
+  border-radius: 50%;
   max-width: 100%;
 }
 
 .characters h2 {
 
 }
+

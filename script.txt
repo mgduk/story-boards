@@ -1,0 +1,195 @@
+Person 0
+- “someone's in trouble”
+- talks in flight
+Person 1
+- has birthday present
+- took note from bird
+- sympathetic
+Person 2
+- gets hit in face with cake
+- shouts in flight
+- likes bird
+
+Places 0
+- where they are from
+Places 1
+- seen in flight
+Places 2
+
+Activities 0
+- what the friends are doing to start
+Activities 1
+- seen from flight
+Activities 2
+
+
+Suddenly, {person(1)} heard a noise. “Up there!” shouted {person(2)}, spotting something.
+The two friends looked up.
+Unfortunately for {person(2)}, at that very moment something was falling from the sky and landed—splat!—on {person(2)}'s face!
+
+
+
+A giant bird with bright green feathers landed softly next to them.
+
+The goo dribbled down into {person(2)}'s mouth. {person(2)}'s expression turned from disgust to delight — “mmm, carrot cake,” {person(2)} said, now happily licking the cake off.
+
+Around the neck of the giant green bird was a rolled up piece of paper tied with string.
+
+{person(3)} took the paper and untied it. “It's a note!” exclaimed {person(3)}.
+
+“To whoever finds this note —  help! I've been dognapped and locked in a castle. Please come quickly and rescue me! Taco” [pawprint]
+
+“Someone's in trouble!” said {person(1)}. “Someone called ‘Taco’ who signed their note with a paw print.”
+
+The green bird ducked down and seemed to be telling them to climb on.
+
+“Maybe this bird will take us to the castle” said {person(3)}. The three friends climbed carefully onto its feathery back.
+
+“Hang on!” said {person(2)}, “I nearly forgot my [object-1]” {person(2)} swiftly jumped down, pick up the [object-1], and clambered back on.
+
+With two powerful beats of its wings, the giant giant bird took off into the air.
+
+---
+
+The would-be rescuers flew higher and higher above the ground, the bird's huge wings powerfully beating the air.
+Over the houses and streets they went, the wind rushing past them.
+“Look down there,” shouted {person(3)}, “I can see [place-2]! It looks so small from up here”.
+“Why are all those people [activity-2]?” wondered {person(2)}.
+
+Suddenly, the land below the {friendCount} friends disappeared, and they were flying over a great sea.
+On and on the bird flew. {person(2)} held tightly onto the [object-1] so it wouldn't fall.
+
+After what seemed like no time at all (but was actually quite a long time because the castle was far far away) a small castle appeared on the horizon.
+
+It then became a slightly bigger castle, then a medium sized castle, until—as they got nearer and nearer—they saw that it was actually a very very big castle.
+
+“Wow!” said {person(2)}, “look at all those towers and flags and other things you'd expect to see on a castle.”
+
+---
+
+The giant bird circled the castle, then came to a soft land right up in front of the drawbridge that leads to the entrance.
+
+{joinn(this.getNames('characters'))} climbed down off the bird. {person(2)} gave it a pat and the bird wriggled with happiness, then flew off into the distance.
+
+The {friendCount} adventurers gazed up at the giant castle looming in front of them.
+
+---
+
+Suddenly, a huge red dragon landed in front of them. THUD! Plumes of dust blew up around it. From the dragon's mouth came wisps of smoke. There was a strong smell of burning.
+
+{joinn(this.getNames('characters'))} jumped back in fright.
+
+They were feeling…
+[Add cards to the feelings list.]
+
+They were feeling [scared, etc]. How were they going to get past the dragon to the castle?
+
+---
+
+“The dragon looks hungry!” said {person(2)}.
+
+“I think it wants to eat us,” said {person(1)}.
+
+“I know — what if we give it some other food instead?” said {person(3)}.
+
+[add pictures of food to “Food for Dragon”]
+
+---
+
+animate (?) food thrown to Dragon
+
+The Dragon eats the [ham]. The Dragon eats the [fish]. The Dragon eats the [burger].
+
+The Dragon lets out a humongous BUUUURRRRB, then it flaps its wings, lifts up into the air and flies away.
+
+There's a quiet metalic sound on the floor.
+
+“A coin!” says {person(3)}, stooping to look at it. “The dragon must have burped it out. I wonder if that will be useful later.”
+
+[move the coin into your hands]
+
+---
+
+The {friendCount} friends run across the drawbridge towards the castle.
+
+(see a boy sitting, weeping. He needs an (object), for I lost my one and my mother will be very unhappy with me. [Mary] gives it. Boy gives them the map.)
+
+[move it into your hands]
+
+---
+
+[Map graphic]
+
+Record turns in code.
+
+---
+
+{person(3)} pushes on the large wooden door to the castle. With a CREEAAK it slowly swings open, and the {friendCount} friends run in.
+
+[navigate according to code]
+
+[Find a coin]
+
+---
+
+As they turn the final corner, through the darkness they can make out a red door. “Hurray!” cries {person(2)}, relieved to have made it.
+
+But then, from out of the shadows lumbered a massive creature. The {friendCount} friends step back into the darkness.
+
+He was taller than two men, was green with bulging muscles and a really really ugly face. Really ugly.
+
+“Who goes there?” he bellowed. “I smells Humans. I likes eating humans.”
+
+“What do we do??” whispered {person(3)} urgently.
+
+“He's a scary troll,” replied {person(2)}, “but if I know trolls — and I know trolls — the only way to beat him is to be even scarier.”
+
+[add scary face cards — build up a wall of scary faces]
+
+---
+
+The troll looked at the scary faces. His face turned from anger to fear. With a little yelp like a kitten standing on a lego brick, the big fat troll ran away to hide.
+
+A familiar tinkling sound tells us that, in his fear, the troll dropped a gold coin.
+
+[pick up the coin?]
+
+---
+
+Boldly, {person(1)} walks up to the red door in front of them, takes hold of the handle and pulls. It doesn't move.
+
+“It's locked,” says {person(1)}. “What do we do now?”
+
+{person(2)}'s eyes adjust to the darkness. In the corner of the hallway, a shape becomes visible. It's a tall rectangular box, with a glass front and a panel of metal buttons to one side. Across the top is a sign say “Keys Vending Machine”.
+
+“A vending machine for keys!” cries {person(2)}. “How very convenient!”
+
+{joinn(this.getNames('characters'))} rush over to the machine. Inside are three keys, hanging on hooks. Beneath each is a small label saying, “3 gold coins”.
+
+(if have 3 coins)
+  “We only have enough to buy one key. We're just going have to choose one and hope it's the right one for this door”, says {person(3)}.
+(else if <3 coins)
+  “I'll run back and get that coin”, says {person(3)}.
+
+[Put the three coins into the vending machine, then choose a key by putting a sticker on the one you want]
+
+---
+
+The vending machine makes a whirring sound, then the key drops down inside. Reaching into the machine, {person(3)} pulls out the key.
+
+{person(3)} walks purposefully over to the red door, looking round to check the troll hadn't come back.
+
+The key slid easily into the lock. With a turn of the key, the lock clicked, and the door swung open. Bright light shone from inside.
+
+---
+
+{joinn(this.getNames('characters'))} walked into the bright room, their eyes struggling to adjust to the light.
+
+Over in the corner of the dusty room, lay a grey and white husky dog, gently snoring.
+
+“Taco!” cried {person(2)}. “We're so pleased to see you!”
+
+Taco woke up, looked at the {friendCount}, and gave a big husky smile.
+
+“Roo!” said Taco, rushing up and licking his {friendCount} rescuers. He was excited to be free.
+

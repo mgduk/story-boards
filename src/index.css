@@ -1,10 +1,134 @@
-@import url('https://fonts.googleapis.com/css?family=Pangolin');
+/*
+
+@trello-blue-50: #E4F0F6;
+@trello-blue-100: #BCD9EA;
+@trello-blue-200: #8BBDD9;
+@trello-blue-300: #5BA4CF;
+@trello-blue-400: #298FCA;
+@trello-blue-500: #0079BF;
+@trello-blue-600: #026AA7;
+@trello-blue-700: #055A8C;
+@trello-blue-800: #094C72;
+@trello-blue-900: #0C3953;
+
+@green-50: #EEF6EC;
+@green-100: #D6ECD2;
+@green-200: #B7DDB0;
+@green-300: #99D18F;
+@green-400: #7BC86C;
+@green-500: #61BD4F;
+@green-600: #5AAC44;
+@green-700: #519839;
+@green-800: #49852E;
+@green-900: #3F6F21;
+
+@orange-50: #FDF5EC;
+@orange-100: #FCE8D2;
+@orange-200: #FAD8B0;
+@orange-300: #FDC788;
+@orange-400: #FFB968;
+@orange-500: #FFAB4A;
+@orange-600: #E99E40;
+@orange-700: #D29034;
+@orange-800: #BB8129;
+@orange-900: #A0711C;
+
+@red-50: #FBEDEB;
+@red-100: #F5D3CE;
+@red-200: #EFB3AB;
+@red-300: #EC9488;
+@red-400: #EF7564;
+@red-500: #EB5A46;
+@red-600: #CF513D;
+@red-700: #B04632;
+@red-800: #933B27;
+@red-900: #6E2F1A;
+
+@yellow-50: #FDFAE5;
+@yellow-100: #FAF3C0;
+@yellow-200: #F5EA92;
+@yellow-300: #F3E260;
+@yellow-400: #F5DD29;
+@yellow-500: #F2D600;
+@yellow-600: #E6C60D;
+@yellow-700: #D9B51C;
+@yellow-800: #CCA42B;
+@yellow-900: #BD903C;
+
+@purple-50: #F7F0FA;
+@purple-100: #EDDBF4;
+@purple-200: #DFC0EB;
+@purple-300: #D5A6E6;
+@purple-400: #CD8DE5;
+@purple-500: #C377E0;
+@purple-600: #A86CC1;
+@purple-700: #89609E;
+@purple-800: #6C547B;
+@purple-900: #484553;
+
+@pink-50: #FEF2F9;
+@pink-100: #FCDEF0;
+@pink-200: #FAC6E5;
+@pink-300: #FFB0E1;
+@pink-400: #FF95D6;
+@pink-500: #FF80CE;
+@pink-600: #E76EB1;
+@pink-700: #CD5A91;
+@pink-800: #B44772;
+@pink-900: #96304C;
+
+@sky-25: #E6F0F5;
+@sky-50: #E4F7FA;
+@sky-100: #BDECF3;
+@sky-200: #8FDFEB;
+@sky-300: #5DD3E5;
+@sky-400: #29CCE5;
+@sky-500: #00C2E0;
+@sky-600: #00AECC;
+@sky-700: #0098B7;
+@sky-800: #0082A0;
+@sky-900: #006988;
+
+@lime-50: #ECFBF3;
+@lime-100: #D3F6E4;
+@lime-200: #B3F1D0;
+@lime-300: #90ECC1;
+@lime-400: #6DECA9;
+@lime-500: #51E898;
+@lime-600: #4FD683;
+@lime-700: #4DC26B;
+@lime-800: #4CAF54;
+@lime-900: #4A9839;
+
+@light-gray-50: #F8F9F9;
+@light-gray-100: #EDEFF0;
+@light-gray-200: #E2E4E6;
+@light-gray-300: #D6DADC;
+@light-gray-400: #CDD2D4;
+@light-gray-500: #C4C9CC;
+@light-gray-600: #B6BBBF;
+@light-gray-700: #A5ACB0;
+@light-gray-800: #959DA1;
+@light-gray-900: #838C91;
+
+@business-blue-50: #EDEFF4;
+@business-blue-100: #D2D7E5;
+@business-blue-200: #B2B9D0;
+@business-blue-300: #838FB5;
+@business-blue-400: #6170A1;
+@business-blue-500: #42548E;
+@business-blue-600: #3E4D80;
+@business-blue-700: #3A476F;
+@business-blue-800: #36405F;
+@business-blue-900: #30364C;
+
+*/
 
 body {
   background-color: #000;
   color: #fff;
   margin: 0;
-  padding: 0;
+  padding: 20px;
   font-family: 'Pangolin', cursive;
   font-size: 28px;
 }
@@ -23,4 +147,151 @@ img {
 
 p {
   text-align: center;
+}
+
+a {
+  color: #8BBDD9;
+}
+a:hover {
+  color: #BCD9EA;
+}
+
+input[type] {
+  font-family: 'Pangolin', cursive;
+  font-size: 1.33em;
+  width: 20em;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  animation: 2s infinite ease-in pulse;
+  margin-top: 3em;
+}
+
+.error {
+  text-align: center;
+  margin-top: 3em;
+  color: #F5EA92;
+}
+.error em {
+  color: #fff;
+  font-style: normal;
+}
+
+
+@keyframes pulse {
+  0% { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+.subtle {
+  opacity: 0.6;
+}
+
+.highlight {
+  color: #FFAB4A;
+}
+
+.strapline {
+  margin: -1.4em 0 3em;
+  font-size: 0.96em;
+}
+
+.trello-hint {
+  background: #026AA7 url(/images/trello-mark-white.png) left top no-repeat;
+  background-size: 2em;
+  background-position-x: 0.5em;
+  background-position-y: 0.5em;
+  color: #fff;
+  border-radius: 5px;
+  padding: 0.66em 3.33em;
+  min-height: 1.33em;
+  line-height: 1.66;
+}
+.trello-hint a {
+  color: #F5EA92;
+}
+.trello-hint a:hover {
+  color: #FAF3C0;
+}
+
+.trello-hint > p {
+  margin: 0 0 0.33em;
+}
+.trello-hint > p:first-child {
+  margin-top: 0;
+}
+.trello-hint > p:last-child {
+  margin-bottom: 0;
+}
+
+.trello-hint--subtle {
+  font-size: 0.8em;
+  width: fit-content;
+  margin: 1.66em auto;
+  padding: 0.66em 1.66em 0.66em 4em;
+}
+
+
+
+.pagination {
+  margin-top: 3em;
+  display: flex;
+  align-items: center;
+}
+.page-change {
+  color: #8BBDD9;
+  border: 1px solid transparent;
+  text-align: center;
+  text-decoration: none;
+  line-height: 0.6;
+  width: 1em;
+  font-size: 1.33em;
+  padding: 0.3em 0.5em 0.2em;
+}
+a.page-change:hover {
+  background: #026AA7;
+  border-color: #298FCA;
+  border-bottom-color: #055A8C;
+  color: #fff;
+}
+.pageNumber {
+  font-size: 0.6em;
+  color: #666;
+  flex-grow: 2;
+  text-align: center;
+}
+
+@font-face {
+  font-family: 'icomoon';
+  src:
+    url('/fonts/icomoon.ttf?sg302v') format('truetype'),
+    url('/fonts/icomoon.woff?sg302v') format('woff'),
+    url('/fonts/icomoon.svg?sg302v#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow-right2:before {
+  content: "\ea3c";
+}
+.icon-arrow-left2:before {
+  content: "\ea40";
 }

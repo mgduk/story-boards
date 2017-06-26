@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "articles": "^0.2.1",
     "bluebird": "^3.5.0",
+    "joinn": "^1.0.3",
     "lodash": "^4.17.4",
     "node-trello": "^1.2.1",
+    "number-to-words": "^1.2.3",
+    "pluralize": "^5.0.0",
+    "qs": "^6.4.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "request-promise": "^4.2.1"
