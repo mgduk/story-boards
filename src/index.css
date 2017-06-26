@@ -186,6 +186,11 @@ input[type] {
   100% { opacity: 0.2; }
 }
 
+.App {
+  max-width: 30em;
+  margin: 0 auto;
+}
+
 .subtle {
   opacity: 0.6;
 }
@@ -206,9 +211,9 @@ input[type] {
   background-position-y: 0.5em;
   color: #fff;
   border-radius: 5px;
-  padding: 0.66em 3.33em;
-  min-height: 1.33em;
-  line-height: 1.66;
+  padding: 0.87em 3.33em 0.66em;
+  min-height: 1.46em;
+  line-height: 1.33;
 }
 .trello-hint a {
   color: #F5EA92;
@@ -242,16 +247,17 @@ input[type] {
   align-items: center;
 }
 .page-change {
+  background: transparent;
   color: #8BBDD9;
   border: 1px solid transparent;
   text-align: center;
   text-decoration: none;
   line-height: 0.6;
-  width: 1em;
+  width: 3em;
   font-size: 1.33em;
-  padding: 0.3em 0.5em 0.2em;
+  padding: 0.2em 0.5em;
 }
-a.page-change:hover {
+button.page-change:hover {
   background: #026AA7;
   border-color: #298FCA;
   border-bottom-color: #055A8C;

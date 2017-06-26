@@ -5,10 +5,12 @@ Person 1
 - has birthday present
 - took note from bird
 - sympathetic
+- thinks dragon wants to eat us
 Person 2
 - gets hit in face with cake
 - shouts in flight
 - likes bird
+- thinks dragon is hungry
 
 Places 0
 - where they are from

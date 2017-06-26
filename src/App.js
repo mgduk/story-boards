@@ -90,7 +90,36 @@ class App extends Component {
               idMembers: [config.idMember]
             }
           ],
-          canBeCreated: () => this.chapter.name == 'dragon'
+          canBeCreated: () => this.chapter.name === 'dragon'
+        },
+        dragonFood: {
+          name: 'Feed the Dragon!',
+          cards: [
+            {
+              name: "We need to give the dragon food! Add pictures of food to this list!",
+              desc: "Why not try drawing some food at http://www.autodraw.com",
+              idMembers: [config.idMember]
+            }
+          ],
+          canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 3
+        },
+        ground: {
+          name: 'On the ground',
+          cards: [
+            {
+              name: 'Gold coin',
+              attachment: {
+                url: 'https://cdn.glitch.com/59eb59af-6a74-424b-b78d-47a120942668%2Fcoin.jpg?1498515332815'
+              }
+            }
+          ],
+          canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 4,
+          includeBotCards: true
+        },
+        bag: {
+          name: 'Bag',
+          canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 4,
+          includeBotCards: true
         },
         keys: {
           name: 'Keys Vending Machine',
@@ -199,6 +228,8 @@ class App extends Component {
       objects: this.getCardNames('objects'),
       foods: this.getCardNames('foods'),
       feelings: this.getCards('feelings').map(nameAndImage),
+      dragonFood: this.getCards('dragonFood').map(this.getAttachmentUrl),
+      bag: this.getCardNames('bag'),
     });
   }
 
@@ -403,11 +434,18 @@ class App extends Component {
         });
         if (cards) {
           createList.then(list =>
-            Promise.each(cards, (card) =>
-              this.trello.post(`/1/cards`, _.extend(card, {
+            Promise.each(cards, (card) => {
+              const cardConfig = _.omit(_.extend(card, {
                 idList: list.id
-              }))
-            )
+              }), 'attachment');
+              const createCard = this.trello.post(`/1/cards`, cardConfig);
+              if (card.attachment) {
+                createCard.then(newCard =>
+                  this.trello.post(`/1/cards/${newCard.id}/attachments`, card.attachment)
+                )
+              }
+              return createCard;
+            })
           )
         }
         return createList;
@@ -483,10 +521,12 @@ class App extends Component {
     // hit & hope update each checkitem
     Promise.map(this.chapters, (chapter, index) => {
       const checkItem = checklist.checkItems[index];
-      if (!checkItem) return;
+      const shouldBeChecked = index < this.state.chapter;
+      const expectedState = shouldBeChecked ? 'complete' : 'incomplete';
+      if (!checkItem || checkItem.state === expectedState) return;
       return this.trello.put(
         `/1/cards/${this.chaptersCard.id}/checklist/${checklist.id}/checkItem/${checkItem.id}/state`, {
-        value: index < this.state.chapter ? 'true' : 'false'
+        value: shouldBeChecked ? 'true' : 'false'
       })
     });
   }
@@ -494,11 +534,10 @@ class App extends Component {
   decorateCards() {
     if (this.lists.feelings.cards.length) {
       return Promise.all(
-        this.lists.feelings.cards.filter(card => card.attachments.length == 0)
+        this.lists.feelings.cards.filter(card => card.attachments.length === 0)
         .map(card =>
           this.getGiphyImage(card.name)
           .then(giphy => {
-            console.log(giphy);
             const url = _.get(giphy, 'data.images.fixed_height.url')
             if (url) {
               return this.trello.post(`/1/cards/${card.id}/attachments`, { url });
@@ -624,18 +663,25 @@ class App extends Component {
       return (
         <div className="App">
           { ChapterTemplate
-            ? <ChapterTemplate {...chapter.props} page={this.state.page} setPages={this.setPages.bind(this)} />
+            ? <ChapterTemplate
+                {...chapter.props}
+                config={this.data}
+                title={chapter.title}
+                page={this.state.page}
+                setPages={this.setPages.bind(this)}
+                movePage={this.movePage.bind(this)}
+              />
             : <div>{chapter.title || `Chapter "${chapter.name}"`} has no pages</div>
           }
           {this.state.pageCount > 1 &&
             <nav className="pagination">
               {this.state.page > 0
-                ? <a href="#" className="page-change page-change--prev icon-arrow-left2" onClick={() => this.movePage(-1)} title="Go to previous page"></a>
+                ? <button className="page-change page-change--prev icon-arrow-left2" onClick={() => this.movePage(-1)} title="Go to previous page"></button>
                 : <span className="page-change page-change--prev"></span>
               }
               <span className="pageNumber">{this.state.page+1} / {this.state.pageCount}</span>
               {this.state.pageCount > this.state.page+1 && this.canViewPage(this.state.page+1)
-                ? <a href="#" className="page-change page-change--next icon-arrow-right2" onClick={() => this.movePage(1)} title="Go to next page"></a>
+                ? <button className="page-change page-change--next icon-arrow-right2" onClick={() => this.movePage(1)} title="Go to next page"></button>
                 : <span className="page-change page-change--next"></span>
               }
             </nav>

@@ -23,3 +23,25 @@
 
 }
 
+
+
+.dragon-food {
+  list-style: none;
+  display: flex;
+}
+.dragon-food li {
+  flex-grow: 1;
+  text-align: center;
+}
+.dragon-food li img {
+  max-width: 100%;
+}
+
+.dragon-food li.clicked {
+  animation: 0.5s ease-out throw forwards;
+}
+
+@keyframes throw {
+  0% { transform: unset; }
+  100% { transform: rotate3d(9, 2, -7, 33deg) translate(3em, -33em) }
+}

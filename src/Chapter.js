@@ -17,6 +17,10 @@ export default class Chapter extends Component {
     return items[index] != null ? items[index] : fallback;
   }
 
+  getArticlized(set, index = null, fallback = 'a _____') {
+    return this.articlize(this.getOne.apply(this, arguments))
+  }
+
   getNames(set) {
     return _.map(this.props.story[set], 'name')
   }

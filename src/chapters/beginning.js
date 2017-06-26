@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 export default class Beginning extends Chapter {
   get pages() {
-    const { story, friendCount, person, object, place } = this.storyHelpers;
+    const { friendCount, person, object, place } = this.storyHelpers;
     const ideasNeeded = () =>
       ['places', 'activities', 'foods', 'objects']
       .filter((type) => _.toArray(this.props.story[type]).length < 3)
@@ -52,6 +52,7 @@ export default class Beginning extends Chapter {
         <p>“Maybe this bird will take us to the castle” said {person(0)}. The three friends climbed carefully onto its feathery back.</p>
         <p>“Wait a moment!” cried {person(1)}, “I nearly forgot my {object(0)}.” {person(1)} swiftly jumped down, pick up the {object(0)}, and clambered back on.</p>
         <p>With two powerful beats of its wings, the giant giant bird took off into the air with the {friendCount} friends holding on tightly.</p>
+        <p className="trello-hint">Tick the ‘{this.props.title}’ checkbox on the {this.props.config.cards.chapters.name} card to go to the next chapter.</p>
       </div>
     ]
   }

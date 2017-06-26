@@ -38,7 +38,7 @@ export default class Introduction extends Chapter {
       pages.push(
         <div>
           <p>Now, open the “Chapters” card on the board.</p>
-          <p>Click the check mark next to “Introduction” to finish this chapter and move onto the next one!</p>
+          <p className="trello-hint">Click the check mark next to “Introduction” to finish this chapter and move onto the next one!</p>
         </div>
       );
     }
