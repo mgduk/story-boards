@@ -13,6 +13,7 @@ export default class Trello {
     return this.api.getAsync.apply(this.api, arguments);
   }
 
+  // drop duplicate requests until TIME_LIMIT milliseconds after the first request was sent
   _debounce(method, url, params) {
     const ref = JSON.stringify(arguments);
     const pending = this.pendingRequests[ref];

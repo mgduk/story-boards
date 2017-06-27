@@ -44,12 +44,15 @@ export default class Chapter extends Component {
       friendCount: converter.toWords(this.props.story.characters.length),
       place: (index) => this.getOne('places', index, { name: '_____' }).name,
       person: (index) => this.getOne('characters', index, { name: '_____' }).name,
+      food: (index) => this.getOne('foods', index),
       object: (index, article = false) => {
         const object = this.getOne('objects', index);
         return (article)
           ? this.articlize(object)
           : this.dearticlize(object);
-      }
+      },
+      feeling: (index, fallback = { name: '_____' }) =>
+        (this.props.story.feelings || [])[index] || fallback
     }
   }
 

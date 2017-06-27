@@ -1,6 +1,7 @@
 Person 0
 - “someone's in trouble”
 - talks in flight
+- suggests planning route
 Person 1
 - has birthday present
 - took note from bird
@@ -11,19 +12,35 @@ Person 2
 - shouts in flight
 - likes bird
 - thinks dragon is hungry
+- has robot ball
 
 Places 0
 - where they are from
 Places 1
 - seen in flight
 Places 2
+-
 
 Activities 0
 - what the friends are doing to start
 Activities 1
 - seen from flight
 Activities 2
+- heard distantly inside castle
 
+Food 0
+- eaten by friends
+Food 1
+- given to Dragon
+Food 2
+- eaten by Troll
+
+Object 0
+- a birthday present, given to boy outside castle
+Object 1
+- held by troll
+Object 2
+- in vending machine
 
 Suddenly, {person(1)} heard a noise. “Up there!” shouted {person(2)}, spotting something.
 The two friends looked up.
@@ -159,6 +176,7 @@ A familiar tinkling sound tells us that, in his fear, the troll dropped a gold c
 ---
 
 Boldly, {person(1)} walks up to the red door in front of them, takes hold of the handle and pulls. It doesn't move.
+
 
 “It's locked,” says {person(1)}. “What do we do now?”
 

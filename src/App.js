@@ -10,9 +10,16 @@ Promise.config({ cancellation: true });
 const config = {
   // storybot
   idMember: "594c98dac441bfe6067dc3af",
-  appKey: "5a1ae77630022a5dfa099ad7c9406662",
-  apiToken: "a87e7377fa46b60da287549f357fdc9cb09b5f9ec30a4035b30f8055054b9e94",
-}
+  appKey: process.env.REACT_APP_APP_KEY,
+  apiToken: process.env.REACT_APP_TOKEN,
+  coinImageUrl: 'https://cdn.glitch.com/59eb59af-6a74-424b-b78d-47a120942668%2Fcoin.jpg?1498515332815',
+  keyImage1: 'https://cdn.pixabay.com/photo/2015/07/16/15/27/key-847830_960_720.jpg',
+  keyImage2: 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Standard-lock-key.jpg',
+  keyImage3: 'https://upload.wikimedia.org/wikipedia/commons/3/33/Ancient_warded_lock_key_transparent.png',
+
+  pollInterval: 1000
+};
+
 
 class App extends Component {
 
@@ -37,10 +44,11 @@ class App extends Component {
           name: 'Characters',
           cards: [
             {
-              name: "Add a few people's names to this list. 👨🏾‍⚕️👩‍🔧👦🏼👩🏼 You can attach photos too, if you like!",
+              name: "Add three people's names to this list as separate cards. 👨🏾‍⚕️👩‍🔧👦🏼👩🏼 You can attach photos too, if you like!",
               idMembers: [config.idMember]
             }
           ],
+          canBeCreated: () => this.chapter.name === 'introduction' && this.state.page >= 1,
         },
         places: {
           name: 'Places',
@@ -50,7 +58,7 @@ class App extends Component {
               idMembers: [config.idMember]
             }
           ],
-          canBeCreated: () => this.state.characters.length > 1
+          canBeCreated: () => this.chapter.name === 'beginning'
         },
         activities: {
           name: 'Activities people might be doing',
@@ -60,17 +68,18 @@ class App extends Component {
               idMembers: [config.idMember]
             }
           ],
-          canBeCreated: () => this.state.characters.length > 1
+          canBeCreated: () => this.chapter.name === 'beginning'
         },
         objects: {
           name: 'Things you might find around the house',
           cards: [
             {
-              name: "e.g. ‘a chair’ or ‘football boot’",
+              name: "e.g. ‘a spoon’ or ‘football boot’",
+              desc: "Ideally these are fairly small objects (so no ‘sofas’) which you can have one of (so no ‘dust’)",
               idMembers: [config.idMember]
             }
           ],
-          canBeCreated: () => this.state.characters.length > 1
+          canBeCreated: () => this.chapter.name === 'beginning'
         },
         foods: {
           name: 'Foods',
@@ -80,7 +89,7 @@ class App extends Component {
               idMembers: [config.idMember]
             }
           ],
-          canBeCreated: () => this.state.characters.length > 1
+          canBeCreated: () => this.chapter.name === 'beginning'
         },
         feelings: {
           name: 'Feelings',
@@ -108,9 +117,7 @@ class App extends Component {
           cards: [
             {
               name: 'Gold coin',
-              attachment: {
-                url: 'https://cdn.glitch.com/59eb59af-6a74-424b-b78d-47a120942668%2Fcoin.jpg?1498515332815'
-              }
+              attachment: { url: config.coinImageUrl },
             }
           ],
           canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 4,
@@ -121,9 +128,31 @@ class App extends Component {
           canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 4,
           includeBotCards: true
         },
-        keys: {
-          name: 'Keys Vending Machine',
-          canBeCreated: () => false,
+        scareTroll: {
+          name: 'Scare the Troll',
+          canBeCreated: () => this.chapter.name === 'troll',
+        },
+        vendingMachine: {
+          name: 'Key Vending Machine',
+          canBeCreated: () => this.chapter.name === 'key' && this.state.page > 0,
+          includeBotCards: true,
+          cards: [
+            {
+              name: 'Key 1',
+              desc: 'Cost: 3 gold coins',
+              attachment: { url: config.keyImage1 }
+            },
+            {
+              name: 'Key 2',
+              desc: 'Cost: 3 gold coins',
+              attachment: { url: config.keyImage2 }
+            },
+            {
+              name: 'Key 3',
+              desc: 'Cost: 3 gold coins',
+              attachment: { url: config.keyImage3 }
+            },
+          ]
         }
       },
 
@@ -132,8 +161,26 @@ class App extends Component {
         chapters: {
           list: 'story',
           name: "Chapters",
-          desc: "Check off each chapter once you've done it. \n\nYou'll only be able to move on once you've completed all you need to in the current chapter!\n\nNow, are you sitting comfortably? Then I'll begin…"
-        }
+          desc: "Check off each chapter once you've done it, to move the story onto the next chapter.\n\nNow, are you sitting comfortably? Then I'll begin…"
+        },
+        coin2: {
+          list: 'ground',
+          name: 'Gold coin',
+          attachment: { url: config.coinImageUrl },
+          canBeCreated: () =>
+            this.chapter.name === 'inside-castle'
+            && this.state.page === 5
+            && this.lists.bag.cards.filter(card => card.name === 'Gold coin').length < 2
+        },
+        coin3: {
+          list: 'ground',
+          name: 'Gold coin',
+          attachment: { url: config.coinImageUrl },
+          canBeCreated: () =>
+            this.chapter.name === 'troll'
+            && this.state.page === 3
+            && this.lists.bag.cards.filter(card => card.name === 'Gold coin').length < 3
+        },
       },
 
       chapters: [
@@ -151,10 +198,9 @@ class App extends Component {
           // get a note about Taco being kidnapped
           name: 'beginning',
           title: 'Once Upon a Time…',
-          prerequisites: () => {
+          canView: () => {
             if (this.state.characters.length < 2) {
-              throw new Error('We need at least two characters for the story. Add some cards with names to the “Characters” list.'
-              )
+              throw new Error('We need at least two characters for the story. Add some cards with names to the “Characters” list.');
             }
           }
         },
@@ -205,10 +251,6 @@ class App extends Component {
           // the friends go off to do [activity] and eat some nice [food — from Dragon list]
           name: 'rescue',
           title: 'The Way It Ends'
-        },
-        {
-          name: 'end',
-          title: 'The end!'
         }
       ]
 
@@ -219,7 +261,7 @@ class App extends Component {
     const nameAndImage = (card) => ({
       name: card ? card.name.trim() : '_____',
       image: this.getAttachmentUrl(card)
-    })
+    });
 
     this.setState({
       characters: this.getCards('characters').map(nameAndImage),
@@ -230,6 +272,12 @@ class App extends Component {
       feelings: this.getCards('feelings').map(nameAndImage),
       dragonFood: this.getCards('dragonFood').map(this.getAttachmentUrl),
       bag: this.getCardNames('bag'),
+      scaryFaces: this.getCards('scareTroll').map(this.getAttachmentUrl),
+      vendingMachine: this.getCards('vendingMachine').map(card => ({
+        name: card.name,
+        stickers: card.stickers,
+        imageUrl: this.getAttachmentUrl(card),
+      })),
     });
   }
 
@@ -264,30 +312,44 @@ class App extends Component {
 
   onWindowKeyDown(ev) {
     if (ev.key === 'ArrowRight') {
-      this.goToPage(this.state.page+1)
+      this.goToPage(this.state.page+1);
     }
     else if (ev.key === 'ArrowLeft') {
-      this.goToPage(this.state.page-1)
+      this.goToPage(this.state.page-1);
     }
   }
 
   setUrl() {
     let url = `/?idBoard=${this.idBoard}`;
     if (this.state.page != null) {
-      url += `#${1+this.state.chapter}.${1+this.state.page}`
+      url += `#${1+this.state.chapter}.${1+this.state.page}`;
     }
-    window.history.replaceState({}, '', url)
+    window.history.replaceState({}, '', url);
   }
 
   componentWillMount() {
     if (!this.idBoard) return;
+    this.loadInitialData()
+  }
+
+  loadInitialData() {
     this.initChapters()
     .then(this.loadBoard.bind(this))
     .then(this.poll.bind(this))
     .then(() => {
-      this.setState({dataLoaded: true});
-      setInterval(this.poll.bind(this), 2000);
+      this.setState({ dataLoaded: true, message: null, error: null });
+      setInterval(this.poll.bind(this), config.pollInterval);
+    })
+    .catch(err => {
+      if (/unauthorized permission requested/.test(err.message)) {
+        this.setState({ message: 'Please add ‘storybot’ as a member of your board' });
+        setTimeout(this.loadInitialData.bind(this), 5000);
+      } else {
+        this.setState({ error: err.message });
+        throw err;
+      }
     });
+
   }
 
   loadBoard() {
@@ -299,7 +361,7 @@ class App extends Component {
     if (this.pendingUpdate) {
       let timeSinceUpdate = Date.now() - this.pendingUpdate.timeStart;
       if (timeSinceUpdate > 10000) {
-        console.log('Cancelled very slow update')
+        console.log('Cancelled very slow update');
         this.pendingUpdate.promise.cancel();
         delete this.pendingUpdate;
       } else {
@@ -321,6 +383,9 @@ class App extends Component {
   catchPollingError(err) {
     if (err.message === 'board not found') {
       this.setState({ error: "I can't see that board. Please check that you've added @storybot and that the URL is correct." });
+    } else if (/unauthorized permission requested/.test(err.message)) {
+      this.setState({ message: 'Please add ‘storybot’ as a member of your board' });
+      setTimeout(this.loadInitialData.bind(this), 5000);
     } else {
       this.setState({ error: err.message });
       throw err;
@@ -401,10 +466,10 @@ class App extends Component {
     });
   }
 
-  getAttachmentUrl(card, previewIndex = 3) {
+  getAttachmentUrl(card) {
     if (card == null) return null;
-    const attachment = card.attachments.find((a) => a.previews[previewIndex] != null)
-    return attachment ? attachment.previews[previewIndex].url : null;
+    const attachment = card.attachments.find((a) => a.previews[4] != null)
+    return attachment ? attachment.previews[4].url : null;
   }
 
   // Processing data
@@ -413,12 +478,14 @@ class App extends Component {
     this.processStoryInput();
     return Promise.all([
       this.createLists(),
+      this.createCards(),
       // either moves to a new chapter, or creates the chapter card:
       this.processChaptersState(),
-      this.decorateCards(),
+      // this.decorateCards(),
     ]);
   }
 
+  // auto-create lists when they can be created
   createLists() {
     const lists = _.map(
       this.data.lists,
@@ -434,18 +501,9 @@ class App extends Component {
         });
         if (cards) {
           createList.then(list =>
-            Promise.each(cards, (card) => {
-              const cardConfig = _.omit(_.extend(card, {
-                idList: list.id
-              }), 'attachment');
-              const createCard = this.trello.post(`/1/cards`, cardConfig);
-              if (card.attachment) {
-                createCard.then(newCard =>
-                  this.trello.post(`/1/cards/${newCard.id}/attachments`, card.attachment)
-                )
-              }
-              return createCard;
-            })
+            Promise.map(cards, (card) =>
+              this.createCard(_.extend(card, { idList: list.id }))
+            )
           )
         }
         return createList;
@@ -453,13 +511,32 @@ class App extends Component {
     });
   }
 
-  createCard(codename) {
-    const data = this.data.cards[codename] || {};
-    const list = this.lists[data.list]
-    if (!list) return Promise.reject();
-    data.idList = list.id
-    delete data.list
-    return this.trello.post('/1/cards', data);
+  // auto-create cards when they can be created
+  createCards() {
+    return Promise.each(_.values(this.data.cards), (cardData) => {
+      const list = this.lists[cardData.list];
+      if (!list || list.cards.find((card) => card.name === cardData.name)) return;
+      if (cardData.canBeCreated && cardData.canBeCreated()) {
+        return this.createCard(cardData);
+      }
+    });
+  }
+
+  createCard(data) {
+    if (!data.idList && data.list) {
+      const list = this.lists[data.list]
+      if (!list) return Promise.reject(new Error(`List ${data.list} not found`));
+      data.idList = list.id
+      delete data.list
+    }
+    if (!data.idList) return Promise.reject(new Error(`No list specified for createCard`));
+    const createCard = this.trello.post('/1/cards', _.omit(data, 'attachment'));
+    if (data.attachment) {
+      createCard.then(card =>
+        this.trello.post(`/1/cards/${card.id}/attachments`, data.attachment)
+      )
+    }
+    return createCard;
   }
 
   checkItemsInSequence(checklist) {
@@ -492,7 +569,7 @@ class App extends Component {
 
   createChaptersCard() {
     if (this.creatingCard) return this.creatingCard;
-    return this.creatingCard = this.createCard('chapters')
+    return this.creatingCard = this.createCard(this.data.cards.chapters)
     .then(card =>
       Promise.all([
         card,
@@ -504,7 +581,7 @@ class App extends Component {
         name: 'Book',
         url: 'https://media.giphy.com/media/11I8v5lE8uq79C/giphy.gif'
       })
-      Promise.each(this.chapters.slice(0, this.chapters.length-1), (chapter) =>
+      Promise.each(this.chapters, (chapter) =>
         this.trello.post(`/1/checklists/${checklist.id}/checkItems`, {
           name: chapter.title
         })
@@ -532,7 +609,7 @@ class App extends Component {
   }
 
   decorateCards() {
-    if (this.lists.feelings.cards.length) {
+    if (this.lists.feelings && this.lists.feelings.cards.length) {
       return Promise.all(
         this.lists.feelings.cards.filter(card => card.attachments.length === 0)
         .map(card =>
@@ -560,7 +637,7 @@ class App extends Component {
   areChapterPrerequisitesMet(index) {
     return _.every(this.chapters.slice(0, index+1).map(chapter => {
       try {
-        _.isFunction(chapter.prerequisites) && chapter.prerequisites();
+        _.isFunction(chapter.canView) && chapter.canView();
         return true;
       } catch (err) {
         this.trello.post(
@@ -588,9 +665,12 @@ class App extends Component {
     if (!this.areChapterPrerequisitesMet(index)) {
       return this.updateChapterChecklist();
     }
+    let pageIndex = this.firstLoad && this.firstChapter === index
+      ? this.firstPage || 0
+      : 0;
     this.setState({
       chapter: index,
-      page: this.firstLoad && this.firstChapter === index ? this.firstPage || 0 : 0,
+      page: pageIndex,
       pageCount: 1
     })
     this.firstLoad = false
@@ -643,6 +723,11 @@ class App extends Component {
       pageCount: pages.length,
       canViewPage: _.map(pages, 'canView')
     })
+    // if the current page's prerequisites aren't yet met, move back a page
+    const page = pages[this.state.page];
+    if (page && page.canView != null && !page.canView()) {
+      this.setState({ page: Math.max(0, this.state.page - 1) })
+    }
   }
 
   onBoardIdKeyUp(ev) {
@@ -654,8 +739,13 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.error) {
-      return <div className="error">{this.state.error}</div>
+    if (this.state.message) {
+      return <div className="hint hint--trello"><p>{this.state.message}</p></div>
+    } else if (this.state.error) {
+      return <div className="error">
+               <p>{this.state.error}</p>
+               <p>(that's an error, sorry)</p>
+              </div>
     } else if (this.state.dataLoaded) {
       this.setUrl();
       const chapter = this.chapter;
@@ -673,13 +763,19 @@ class App extends Component {
               />
             : <div>{chapter.title || `Chapter "${chapter.name}"`} has no pages</div>
           }
+          {(this.state.page === this.state.pageCount-1) && (this.state.chapter < this.chapters.length-1) &&
+            <p className="hint hint--trello">Click the `{chapter.title}` check box on the Chapters card to finish this chapter and move onto the next one</p>
+          }
           {this.state.pageCount > 1 &&
             <nav className="pagination">
               {this.state.page > 0
                 ? <button className="page-change page-change--prev icon-arrow-left2" onClick={() => this.movePage(-1)} title="Go to previous page"></button>
                 : <span className="page-change page-change--prev"></span>
               }
-              <span className="pageNumber">{this.state.page+1} / {this.state.pageCount}</span>
+              <div className="pageNumber">
+                <div>{chapter.title}</div>
+                <div>page {this.state.page+1} of {this.state.pageCount}</div>
+              </div>
               {this.state.pageCount > this.state.page+1 && this.canViewPage(this.state.page+1)
                 ? <button className="page-change page-change--next icon-arrow-right2" onClick={() => this.movePage(1)} title="Go to next page"></button>
                 : <span className="page-change page-change--next"></span>

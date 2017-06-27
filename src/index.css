@@ -204,39 +204,44 @@ input[type] {
   font-size: 0.96em;
 }
 
-.trello-hint {
-  background: #026AA7 url(/images/trello-mark-white.png) left top no-repeat;
-  background-size: 2em;
-  background-position-x: 0.5em;
-  background-position-y: 0.5em;
+.hint {
+  background: #49852E;
   color: #fff;
   border-radius: 5px;
-  padding: 0.87em 3.33em 0.66em;
-  min-height: 1.46em;
   line-height: 1.33;
+  padding: 0.66em 2em;
+  font-size: 0.9em;
 }
-.trello-hint a {
+.hint a {
   color: #F5EA92;
 }
-.trello-hint a:hover {
+.hint a:hover {
   color: #FAF3C0;
 }
 
-.trello-hint > p {
+.hint > p {
   margin: 0 0 0.33em;
 }
-.trello-hint > p:first-child {
+.hint > p:first-child {
   margin-top: 0;
 }
-.trello-hint > p:last-child {
+.hint > p:last-child {
   margin-bottom: 0;
 }
 
-.trello-hint--subtle {
+.hint.hint--subtle {
   font-size: 0.8em;
   width: fit-content;
   margin: 1.66em auto;
   padding: 0.66em 1.66em 0.66em 4em;
+}
+
+.hint.hint--trello {
+  background: #026AA7 url(/images/trello-mark-white.png) left center no-repeat;
+  background-size: 2em;
+  background-position-x: 0.5em;
+  padding: 0.87em 3.33em 0.66em;
+  min-height: 1.46em;
 }
 
 
@@ -300,4 +305,42 @@ button.page-change:hover {
 }
 .icon-arrow-left2:before {
   content: "\ea40";
+}
+
+.ball-screen {
+  border: 4px solid #fff;
+  border-color: #444 #fff #fff #444;
+  background: #ccc linear-gradient(to bottom,#222,#777);
+  padding: 0.2em 2em;
+  font-size: 2em;
+  margin: 0.66em auto;
+  width: fit-content;
+  min-width: 5em;
+  text-transform: uppercase;
+  font-family: 'VT323', monospace;
+  color: #F3E260;
+}
+
+.taco {
+  max-height: 10em;
+}
+
+.note-from-taco {
+  height: 15em;
+}
+
+.bb8 {
+  height: 8em;
+}
+
+.map {
+  border-radius: 0;
+}
+
+.map--small {
+  height: 8em;
+}
+
+.map--large {
+  height: 20em;
 }
