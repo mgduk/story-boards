@@ -1,28 +1,10 @@
-
-
-.characters {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  list-style: none;
-}
-
-.characters li {
-  position: relative;
-  text-align: center;
-  flex-grow: 1;
-  padding: 10px;
-}
-
-.characters img {
-  border-radius: 50%;
-  max-width: 100%;
-}
-
 .characters h2 {
-
+  font-size: 1.2em;
 }
 
+.image-grid.characters li {
+  width: 31%;
+}
 
 
 .dragon-food li img {

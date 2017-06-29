@@ -17,7 +17,7 @@ const config = {
   keyImage2: 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Standard-lock-key.jpg',
   keyImage3: 'https://upload.wikimedia.org/wikipedia/commons/3/33/Ancient_warded_lock_key_transparent.png',
 
-  pollInterval: 1000
+  pollInterval: 2000
 };
 
 
@@ -288,7 +288,13 @@ class App extends Component {
 
     this.idBoard = qs.parse(window.location.search.substring(1)).idBoard;
 
+
     this.trello = new Trello(config.appKey, config.apiToken);
+
+    if (!this.idBoard) {
+      this.loadTrelloClientLibrary()
+      .then(() => this.setState({ readyToAuth: true }));
+    }
 
     this.lists = {};
     this.state = {
@@ -310,12 +316,28 @@ class App extends Component {
     window.trelloStory = this;
   }
 
+  loadTrelloClientLibrary() {
+    const addScript = (url) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = url
+        script.addEventListener('load', resolve);
+        script.addEventListener('error', reject);
+        document.head.appendChild(script)
+      });
+    }
+    return addScript('https://code.jquery.com/jquery-3.2.1.slim.min.js')
+    .then(() => addScript(`https://trello.com/1/client.js?key=${config.appKey}`))
+  }
+
   onWindowKeyDown(ev) {
     if (ev.key === 'ArrowRight') {
       this.goToPage(this.state.page+1);
     }
     else if (ev.key === 'ArrowLeft') {
       this.goToPage(this.state.page-1);
+    } else if (ev.key === 'f' && this.state.dataLoaded) {
+      document.body.webkitRequestFullscreen();
     }
   }
 
@@ -671,7 +693,7 @@ class App extends Component {
     this.setState({
       chapter: index,
       page: pageIndex,
-      pageCount: 1
+      pageCount: null
     })
     this.firstLoad = false
     this.currentChapter = index;
@@ -698,6 +720,9 @@ class App extends Component {
   }
 
   movePage(delta) {
+    if (this.state.chapter === 0 && this.state.page === 0) {
+      document.body.webkitRequestFullscreen();
+    }
     this.goToPage(this.state.page + delta);
   }
 
@@ -709,7 +734,7 @@ class App extends Component {
     const data = _.extend({
       name: '??',
       props: {},
-      pageCount: 1
+      pageCount: null
     }, this.chapters[chapterIndex] || {});
     data.props = _.mapValues(data.props, (val, key) =>
       _.isFunction(val) ? val() : val
@@ -736,6 +761,21 @@ class App extends Component {
     if (matches) {
       window.location.href = `?idBoard=${matches[1]}`;
     }
+  }
+
+  startAuth() {
+    window.Trello.authorize({
+      type: 'popup',
+      name: 'Story Board',
+      scope: {
+        read: 'true',
+        write: 'true'
+      },
+      success: function() {
+        window.Trello.members.get('me', function() { console.log('member', arguments) }, function(err) { console.error(err) });
+      },
+      error: () => console.log('error', ...arguments),
+    });
   }
 
   render() {
@@ -788,6 +828,10 @@ class App extends Component {
       return <div className="error">
         <h1>Story Board</h1>
         <p className="strapline">Interactive Storytrelling</p>
+
+        {this.state.readyToAuth &&
+          <button onClick={this.startAuth}>Authorize Trello</button>
+        }
 
         <p>Add <em>@storybot</em> to an empty Trello board and paste the board URL here:</p>
         <input type="text" ref="idBoard" placeholder="e.g. https://trello.com/b/V8y9r5tF" onKeyUp={this.onBoardIdKeyUp} />

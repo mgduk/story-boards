@@ -124,12 +124,16 @@
 
 */
 
+html {
+  height: 100%;
+  width: 100%;
+}
 body {
   background-color: #000;
   color: #fff;
   margin: 0;
   padding: 20px;
-  font-family: 'Pangolin', cursive;
+  font-family: 'Pangolin', sans-serif;
   font-size: 28px;
 }
 
@@ -157,7 +161,7 @@ a:hover {
 }
 
 input[type] {
-  font-family: 'Pangolin', cursive;
+  font-family: 'Pangolin', sans-serif;
   font-size: 1.33em;
   width: 20em;
   text-align: center;

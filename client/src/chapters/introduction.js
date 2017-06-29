@@ -2,12 +2,17 @@ import React from 'react';
 import Chapter from '../Chapter'
 
 export default class Introduction extends Chapter {
+  openInNewWindow(ev) {
+     ev.preventDefault();
+     window.open(ev.target.href);
+  }
+
   get pages() {
     return [
       <div>
         <h1>Welcome to Story Board!</h1>
         <p>We'll be telling a story together. Open your Trello board to get started:</p>
-        <p><a href={this.props.boardUrl}>{this.props.boardUrl}</a></p>
+        <p><a href={this.props.boardUrl} onClick={this.openInNewWindow}>{this.props.boardUrl}</a></p>
         <p>Then press the right arrow on your keyboard or press <span className="icon-arrow-right2"></span>.</p>
       </div>
     ,
@@ -15,12 +20,12 @@ export default class Introduction extends Chapter {
         { this.props.story.characters.length === 0 ?
           <div>
             <h1>First, our story needs some characters!</h1>
-            <p className="hint hint--trello">Add three cards to the <a href={this.props.boardUrl}>{this.props.config.lists.characters.name} list</a> with names <br />— and photos too if you like!</p>
+            <p className="hint hint--trello">Add three cards to the <a href={this.props.boardUrl} onClick={this.openInNewWindow}>{this.props.config.lists.characters.name} list</a> with names <br />— and photos too if you like!</p>
           </div>
           :
           <h1>Our fearless adventurers</h1>
         }
-        <ul className="characters">
+        <ul className="characters image-grid">
           { this.props.story.characters.map((character) =>
             <li key={character.name}>
               <h2>{character.name}</h2>

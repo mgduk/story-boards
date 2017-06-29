@@ -43,4 +43,8 @@ export default class Trello {
   delete(url, params) {
     return this._debounce('delete', url, params);
   }
+
+  authorize() {
+    return this.api.authorize.apply(this.api, arguments);
+  }
 }
