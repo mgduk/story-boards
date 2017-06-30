@@ -8,7 +8,7 @@
     "start": "concurrently \"npm run start-server\" \"cd client && npm start\"",
     "start-server": "node server/src/index.js",
     "test": "mocha test/",
-    "production": "npm run start-server && cd client && npm run build"
+    "postinstall": "cd clients && npm run build"
   },
   "repository": {
     "type": "git",
