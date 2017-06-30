@@ -1,6 +1,7 @@
 require('dotenv').config()
 const _ = require('lodash');
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const Promise = require('bluebird');
 const Trello = require('node-trello');
@@ -63,6 +64,12 @@ const validateArgs = (args) => {
 const errorResponse = (res, statusCode, message) => {
   res.status(statusCode).json({ statusCode, error: message });
 };
+
+app.use(express.static(path.join(__dirname, '../../client/build')));
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
+});
 
 app.get('/trello/boards', (req, res, next) => {
   const userTrello = getUserTrello(req.query.token);
