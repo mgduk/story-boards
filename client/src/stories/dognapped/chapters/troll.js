@@ -1,5 +1,5 @@
 import React from 'react';
-import Chapter from '../Chapter'
+import Chapter from '../../../Chapter'
 import joinn from 'joinn';
 import _ from 'lodash';
 
@@ -31,10 +31,13 @@ export default class Troll extends Chapter {
           ? <p className="hint hint--trello">Add your best scary faces to the ‘{this.props.config.lists.scareTroll.name}’ list.</p>
           : this.getScaryFacesElement()
         }
+        {story.scaryFaces.length > 0 && story.scaryFaces.length < 3 &&
+          <p className="hint">To scare this troll, we're going to need at least three scary faces!</p>
+        }
       </div>
     ,
       {
-        canView: () => this.props.story.scaryFaces.filter(_.identity).length > 3,
+        canView: () => this.props.story.scaryFaces.filter(_.identity).length >= 3,
         element:
           <div>
             {this.getScaryFacesElement()}

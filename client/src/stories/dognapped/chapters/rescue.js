@@ -1,8 +1,8 @@
 import React from 'react';
-import Chapter from '../Chapter'
+import Chapter from '../../../Chapter'
 import joinn from 'joinn';
 import capitalize from 'capitalize';
-import taco from '../taco-paws.svg';
+import taco from './rescue/taco-paws.svg';
 
 export default class Rescue extends Chapter {
   get pages() {

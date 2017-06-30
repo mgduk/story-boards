@@ -1,5 +1,5 @@
 import React from 'react';
-import Chapter from '../Chapter'
+import Chapter from '../../../Chapter'
 
 export default class Flight extends Chapter {
   get pages() {

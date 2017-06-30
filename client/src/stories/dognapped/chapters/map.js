@@ -1,5 +1,5 @@
 import React from 'react';
-import Chapter from '../Chapter'
+import Chapter from '../../../Chapter'
 
 export default class Map extends Chapter {
   get pages() {
@@ -31,14 +31,11 @@ export default class Map extends Chapter {
     ,
       <div>
         <p>“I know, we can use this!” said {person(2)}, pulling a small robot ball out of a pocket. “We can programme it where to go, then follow its light in the dark castle corridors.”</p>
-        <p>
-          <img src="/images/bb8.jpg" alt="Robot Ball" className="bb8" />
-        </p>
         <p>“Brilliant idea!” said {person(0)}.</p>
       </div>
     ,
       <div>
-        <p className="hint">Use the map to programme the robot ball, telling it which way to turn when it sees each thing that is marked on the map.</p>
+        <p className="hint hint--trello">Use the map to programme the robot ball. <br />For each object on the map, put a label on the card saying whether the ball should turn left, turn right or go straight on.</p>
         <p><img src="/images/map.jpg" alt="Map" className="map map--large" /></p>
       </div>
     ,

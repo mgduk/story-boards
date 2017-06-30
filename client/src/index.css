@@ -167,6 +167,19 @@ input[type] {
   text-align: center;
 }
 
+select {
+  font-family: 'Pangolin', sans-serif;
+  font-size: 1em;
+}
+
+code {
+  background: #ccc;
+  color: #333;
+  padding: 0.1em 0.3em;
+  border-radius: 5px;
+  margin: 0 0.1em;
+}
+
 .loading {
   text-align: center;
   animation: 2s infinite ease-in pulse;
@@ -197,6 +210,16 @@ input[type] {
 
 .subtle {
   opacity: 0.6;
+}
+
+.smaller {
+  font-size: 0.8em;
+}
+
+.small-print {
+  font-size: 0.66em;
+  color: #888;
+  margin-top: 2em;
 }
 
 .highlight {
@@ -279,6 +302,7 @@ button.page-change:hover {
   text-align: center;
 }
 
+
 @font-face {
   font-family: 'icomoon';
   src:
@@ -309,6 +333,41 @@ button.page-change:hover {
 }
 .icon-arrow-left2:before {
   content: "\ea40";
+}
+
+.subtle-link {
+  border: none;
+  background: none;
+  color: #fff;
+  font-family: 'Pangolin', sans-serif;
+  font-size: 1em;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 0.3em;
+  padding: 0;
+  opacity: 0.4;
+}
+.subtle-link:hover {
+  color: #fff;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+.footer > * {
+  margin-left: 1em;
+}
+.footer > *:first-child {
+  margin-left: 0;
+}
+.open-board {
+  background: url(/images/trello-mark-white.png) left center no-repeat;
+  background-size: 1em;
+  padding-left: 1.33em;
 }
 
 .ball-screen {
@@ -347,4 +406,94 @@ button.page-change:hover {
 
 .map--large {
   height: 20em;
+}
+
+
+
+.trello-member {
+  display: flex;
+  color: #333;
+  margin: 0 auto 2em;
+  flex-wrap: wrap;
+  width: fit-content;
+  background: #EDEFF0;
+  border: 4px solid #026AA7;
+  padding: 0 0 0.3em;
+  justify-content: center;
+  align-items: center;
+}
+.trello-member > h2 {
+  font-size: 0.6em;
+  flex-basis: 100%;
+  margin: 0 0 0.5em;
+  background: #026AA7;
+  padding: 0.3em 0;
+  color: #fff;
+}
+.trello-member > h2 > img {
+  width: 1em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+.avatar {
+  border-radius: 50%;
+}
+.trello-fullName {
+  font-size: 0.8em;
+  margin: 0 0.33em 0 0.5em;
+}
+.trello-username {
+  font-size: 0.5em;
+  color: #999;
+}
+.change-trello-account {
+  font-size: 0.5em;
+  margin-left: 1em;
+}
+
+
+.splash {
+  text-align: center;
+  width: 31em;
+  margin: 0 auto;
+  font-size: 0.8em;
+}
+
+
+.button {
+  border: 0.1em solid #aaa;
+  padding: 0.33em 0.67em;
+  font-size: 0.8em;
+  border-radius: 5px;
+  background: #ccc;
+  background: linear-gradient(to bottom, #ccc, #aaa);
+  border-bottom-color: #888;
+}
+.button.button--primary {
+  color: #fff;
+  background: #5AAC44;
+  background: linear-gradient(to bottom, #5AAC44, #49852E);
+  border-color: #49852E;
+  border-bottom-color: #3F6F21;
+}
+
+.existing-stories {
+  margin-bottom: 2em;
+  padding: 1em;
+  background: #333;
+}
+
+
+.tips {
+  font-size: 0.7em;
+  padding: 0.67em;
+  background: #0C3953;
+  margin-top: 3em;
+}
+.tips h2 {
+  margin: 0;
+  text-align: center;
+}
+.tips li {
+  margin-bottom: 0.5em;
 }

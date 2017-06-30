@@ -1,5 +1,5 @@
 import React from 'react';
-import Chapter from '../Chapter'
+import Chapter from '../../../Chapter'
 import joinn from 'joinn';
 import _ from 'lodash';
 
@@ -12,6 +12,7 @@ export default class Dragon extends Chapter {
   }
 
   onFoodClick(ev) {
+    if (this.props.story.dragonFood.length < 2) return;
     const foodClickCount = (this.state.foodClickCount || 0) + 1
     this.setState({ foodClickCount });
     ev.currentTarget.classList.add('clicked')
@@ -67,12 +68,13 @@ export default class Dragon extends Chapter {
                   )}
                 </ul>
             }
-            {story.dragonFood.filter(_.identity).length > 0 && <p>Touch the food to throw it to the dragon</p> }
+            {story.dragonFood.filter(_.identity).length === 1 && <p className="hint">We need more! It's a hungry-looking dragon.</p> }
+            {story.dragonFood.filter(_.identity).length > 1 && <p className="hint">Touch the food to throw it to the dragon</p> }
           </div>
         }
     ,
       {
-        canView: () => this.props.story.dragonFood.length > 0 && this.state.foodClickCount >= this.props.story.dragonFood.length,
+        canView: () => this.props.story.dragonFood.length > 1 && this.state.foodClickCount >= this.props.story.dragonFood.length,
         element:
           <div>
             <p>The dragon greedily eats all the food thrown to it.</p>

@@ -3,282 +3,33 @@ import _ from 'lodash';
 import './App.css';
 import Promise from 'bluebird';
 import qs from 'qs';
+import moment from 'moment';
 import Trello from './Trello';
-import rp from 'request-promise';
+import loading from './loading.svg';
+import DognappedStory from './stories/dognapped';
 Promise.config({ cancellation: true });
+
+
+const stories = {
+  dognapped: DognappedStory
+};
 
 const config = {
   // storybot
-  idMember: "594c98dac441bfe6067dc3af",
+  botIdMember: "594c98dac441bfe6067dc3af",
   appKey: process.env.REACT_APP_APP_KEY,
   apiToken: process.env.REACT_APP_TOKEN,
-  coinImageUrl: 'https://cdn.glitch.com/59eb59af-6a74-424b-b78d-47a120942668%2Fcoin.jpg?1498515332815',
-  keyImage1: 'https://cdn.pixabay.com/photo/2015/07/16/15/27/key-847830_960_720.jpg',
-  keyImage2: 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Standard-lock-key.jpg',
-  keyImage3: 'https://upload.wikimedia.org/wikipedia/commons/3/33/Ancient_warded_lock_key_transparent.png',
 
-  pollInterval: 2000
+  pollInterval: 2000,
+
+  story: 'dognapped',
 };
 
 
 class App extends Component {
 
-  get data() {
-    return {
-      // These lists will be autocreated once canBeCreated returns true
-      //  (or immediately if no `canBeCreated` is defined)
-      lists: {
-        story: {
-          name: 'Story Board',
-          // Normally, any cards created by this bot are ignored
-          includeBotCards: true,
-          cards: [
-            {
-              name: 'About this board',
-              desc: "This Trello board is part of an interactive storytelling app called Story Board. Add cards to give your ideas for the story. Make choices in the story by changing things on this board.",
-              idMembers: [config.idMember]
-            }
-          ],
-        },
-        characters: {
-          name: 'Characters',
-          cards: [
-            {
-              name: "Add three people's names to this list as separate cards. 👨🏾‍⚕️👩‍🔧👦🏼👩🏼 You can attach photos too, if you like!",
-              idMembers: [config.idMember]
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'introduction' && this.state.page >= 1,
-        },
-        places: {
-          name: 'Places',
-          cards: [
-            {
-              name: "Famous places or places near you — whatever you want",
-              idMembers: [config.idMember]
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'beginning'
-        },
-        activities: {
-          name: 'Activities people might be doing',
-          cards: [
-            {
-              name: "e.g. ‘swimming’ or ‘building a tower out of mattresses’",
-              idMembers: [config.idMember]
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'beginning'
-        },
-        objects: {
-          name: 'Things you might find around the house',
-          cards: [
-            {
-              name: "e.g. ‘a spoon’ or ‘football boot’",
-              desc: "Ideally these are fairly small objects (so no ‘sofas’) which you can have one of (so no ‘dust’)",
-              idMembers: [config.idMember]
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'beginning'
-        },
-        foods: {
-          name: 'Foods',
-          cards: [
-            {
-              name: "e.g. ‘carrot cake’ (my favourite!)",
-              idMembers: [config.idMember]
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'beginning'
-        },
-        feelings: {
-          name: 'Feelings',
-          cards: [
-            {
-              name: "e.g. ‘happy’",
-              idMembers: [config.idMember]
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'dragon'
-        },
-        dragonFood: {
-          name: 'Feed the Dragon!',
-          cards: [
-            {
-              name: "We need to give the dragon food! Add pictures of food to this list!",
-              desc: "Why not try drawing some food at http://www.autodraw.com",
-              idMembers: [config.idMember]
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 3
-        },
-        ground: {
-          name: 'On the ground',
-          cards: [
-            {
-              name: 'Gold coin',
-              attachment: { url: config.coinImageUrl },
-            }
-          ],
-          canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 4,
-          includeBotCards: true
-        },
-        bag: {
-          name: 'Bag',
-          canBeCreated: () => this.chapter.name === 'dragon' && this.state.page === 4,
-          includeBotCards: true
-        },
-        scareTroll: {
-          name: 'Scare the Troll',
-          canBeCreated: () => this.chapter.name === 'troll',
-        },
-        vendingMachine: {
-          name: 'Key Vending Machine',
-          canBeCreated: () => this.chapter.name === 'key' && this.state.page > 0,
-          includeBotCards: true,
-          cards: [
-            {
-              name: 'Key 1',
-              desc: 'Cost: 3 gold coins',
-              attachment: { url: config.keyImage1 }
-            },
-            {
-              name: 'Key 2',
-              desc: 'Cost: 3 gold coins',
-              attachment: { url: config.keyImage2 }
-            },
-            {
-              name: 'Key 3',
-              desc: 'Cost: 3 gold coins',
-              attachment: { url: config.keyImage3 }
-            },
-          ]
-        }
-      },
-
-      // These cards will be created later on in the story
-      cards: {
-        chapters: {
-          list: 'story',
-          name: "Chapters",
-          desc: "Check off each chapter once you've done it, to move the story onto the next chapter.\n\nNow, are you sitting comfortably? Then I'll begin…"
-        },
-        coin2: {
-          list: 'ground',
-          name: 'Gold coin',
-          attachment: { url: config.coinImageUrl },
-          canBeCreated: () =>
-            this.chapter.name === 'inside-castle'
-            && this.state.page === 5
-            && this.lists.bag.cards.filter(card => card.name === 'Gold coin').length < 2
-        },
-        coin3: {
-          list: 'ground',
-          name: 'Gold coin',
-          attachment: { url: config.coinImageUrl },
-          canBeCreated: () =>
-            this.chapter.name === 'troll'
-            && this.state.page === 3
-            && this.lists.bag.cards.filter(card => card.name === 'Gold coin').length < 3
-        },
-      },
-
-      chapters: [
-        {
-          // title screen
-          // create characters
-          name: 'introduction',
-          title: 'Introduction',
-          props: {
-            boardUrl: `https://trello.com/b/${this.idBoard}`
-          }
-        },
-        {
-          // The beginnng of the story
-          // get a note about Taco being kidnapped
-          name: 'beginning',
-          title: 'Once Upon a Time…',
-          canView: () => {
-            if (this.state.characters.length < 2) {
-              throw new Error('We need at least two characters for the story. Add some cards with names to the “Characters” list.');
-            }
-          }
-        },
-        {
-          // fly to castle
-          // see things on the way (combining contributed activities/objects/famous people)
-          name: 'flight',
-          title: 'Flight'
-        },
-        {
-          // a dragon guards the bridge to the castle
-          // draw food (Autodraw) to throw to the dragon, so we can slip past
-          // Dragon burps out a coin
-          name: 'dragon',
-          title: 'Outside the Castle'
-        },
-        {
-          // read map and write if statements for navigating the castle
-          name: 'map',
-          title: 'A Boy with a Plan'
-        },
-        {
-          // nagivate around the castle, using the directions the kids
-          // programmed previously
-          // Find and collect a coin
-          name: 'inside-castle',
-          title: 'Within the Castle'
-        },
-        {
-          // get to the door, but there's a troll!
-          // It's ugly. Make enough ugly faces to scare it off.
-          // the troll runs away crying for its mummy, dropping a coin
-          name: 'troll',
-          title: 'A Rather Large Problem'
-        },
-        {
-          // There's a door — but it's locked!
-          // Luckily, there's a key vending machine.
-          // Enter the coins you've collected. Then use a sticker to choose a key.
-          // (the key then appears on the story)
-          // Hurray — it works!
-          name: 'key',
-          title: 'The Key Part of the Story'
-        },
-        {
-          // meet Taco. Taco says “Roo!”
-          // escape the castle and set Taco free
-          // the friends go off to do [activity] and eat some nice [food — from Dragon list]
-          name: 'rescue',
-          title: 'The Way It Ends'
-        }
-      ]
-
-    };
-  }
-
-  processStoryInput() {
-    const nameAndImage = (card) => ({
-      name: card ? card.name.trim() : '_____',
-      image: this.getAttachmentUrl(card)
-    });
-
-    this.setState({
-      characters: this.getCards('characters').map(nameAndImage),
-      places: this.getCards('places').map(nameAndImage),
-      activities: this.getCardNames('activities'),
-      objects: this.getCardNames('objects'),
-      foods: this.getCardNames('foods'),
-      feelings: this.getCards('feelings').map(nameAndImage),
-      dragonFood: this.getCards('dragonFood').map(this.getAttachmentUrl),
-      bag: this.getCardNames('bag'),
-      scaryFaces: this.getCards('scareTroll').map(this.getAttachmentUrl),
-      vendingMachine: this.getCards('vendingMachine').map(card => ({
-        name: card.name,
-        stickers: card.stickers,
-        imageUrl: this.getAttachmentUrl(card),
-      })),
-    });
+  get story() {
+    return stories[config.story](this);
   }
 
   // the rest below here is unrelated to any one particular story
@@ -286,22 +37,29 @@ class App extends Component {
   constructor() {
     super();
 
-    this.idBoard = qs.parse(window.location.search.substring(1)).idBoard;
 
+    const userToken = this.getUserToken();
+    this.idBoard = window.sessionStorage.getItem('idBoard');
 
-    this.trello = new Trello(config.appKey, config.apiToken);
+    // it's fine if either param is null at this stage
+    this.trello = new Trello(userToken, this.idBoard);
 
-    if (!this.idBoard) {
-      this.loadTrelloClientLibrary()
-      .then(() => this.setState({ readyToAuth: true }));
+    if (userToken) {
+      this.getMemberDetails();
+      if (!this.idBoard) {
+        this.getExistingBoards();
+      }
     }
 
     this.lists = {};
     this.state = {
+      authed: userToken,
+      idBoard: this.idBoard,
       dataLoaded: false,
       chapter: 0,
       page: 0,
-      pageCount: 1
+      pageCount: null,
+      existingBoards: null,
     };
 
     const hashMatches = window.location.hash.match(/\b(\d+)\.(\d+)/);
@@ -312,22 +70,42 @@ class App extends Component {
     this.firstLoad = true;
 
     window.addEventListener('keydown', this.onWindowKeyDown.bind(this));
-    // expose for debugging console use
+    window.addEventListener('click', (ev) => {
+      if (ev.target.tagName === 'A' && ev.target.href) {
+        ev.preventDefault();
+        window.open(ev.target.href);
+      }
+    });
+
     window.trelloStory = this;
   }
 
-  loadTrelloClientLibrary() {
-    const addScript = (url) => {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = url
-        script.addEventListener('load', resolve);
-        script.addEventListener('error', reject);
-        document.head.appendChild(script)
-      });
+  getUserToken() {
+    const token = window.sessionStorage.getItem('token') || (() => {
+      const m = window.location.hash.match(/[#&]token=([a-f0-9]{64})(?=$|&)/);
+      if (m) {
+        const hash = window.location.hash.replace(m[0], '').replace(/[#]$/, '');
+        this.setUrl(hash);
+      }
+      return m && m[1];
+    })();
+    if (token) {
+      window.sessionStorage.setItem('token', token);
     }
-    return addScript('https://code.jquery.com/jquery-3.2.1.slim.min.js')
-    .then(() => addScript(`https://trello.com/1/client.js?key=${config.appKey}`))
+    return token;
+  }
+
+  setBoardId(idBoard) {
+    window.sessionStorage.setItem('idBoard', idBoard)
+    this.idBoard = idBoard;
+    this.trello.setIdBoard(idBoard);
+    this.setState({ idBoard });
+  }
+
+  setBoard(board) {
+    this.setBoardId(board.id)
+    this.setState({ board: board });
+    return board;
   }
 
   onWindowKeyDown(ev) {
@@ -341,10 +119,13 @@ class App extends Component {
     }
   }
 
-  setUrl() {
-    let url = `/?idBoard=${this.idBoard}`;
-    if (this.state.page != null) {
-      url += `#${1+this.state.chapter}.${1+this.state.page}`;
+  setUrl(hash = null) {
+    let url = `/`;
+    if (hash == null && this.state && this.state.page != null) {
+      hash = `${1+this.state.chapter}.${1+this.state.page}`;
+    }
+    if (hash) {
+      url += `#${hash.replace(/^#/, '')}`;
     }
     window.history.replaceState({}, '', url);
   }
@@ -354,9 +135,18 @@ class App extends Component {
     this.loadInitialData()
   }
 
+  getStoryBoardTitle() {
+    return `${this.story.config.title} — a Story Board`;
+  }
+
+  createBoard() {
+    return this.trello.post('/boards', { name: this.getStoryBoardTitle() })
+    .then(this.setBoard.bind(this))
+    .then(this.loadInitialData.bind(this))
+  }
+
   loadInitialData() {
     this.initChapters()
-    .then(this.loadBoard.bind(this))
     .then(this.poll.bind(this))
     .then(() => {
       this.setState({ dataLoaded: true, message: null, error: null });
@@ -371,29 +161,20 @@ class App extends Component {
         throw err;
       }
     });
-
-  }
-
-  loadBoard() {
-    return this.trello.get(`/1/boards/${this.idBoard}`)
-    .then(board => this.board = board);
   }
 
   poll() {
     if (this.pendingUpdate) {
       let timeSinceUpdate = Date.now() - this.pendingUpdate.timeStart;
       if (timeSinceUpdate > 10000) {
-        console.log('Cancelled very slow update');
         this.pendingUpdate.promise.cancel();
         delete this.pendingUpdate;
       } else {
-        console.log('Waiting for slow update');
         return;
       }
     }
     this.pendingUpdate = {
-      promise: this.updateLists()
-        .then(this.updateCards.bind(this))
+      promise: this.getTrelloData()
         .then(this.processData.bind(this))
         .then(() => delete this.pendingUpdate)
         .catch(this.catchPollingError.bind(this)),
@@ -415,8 +196,8 @@ class App extends Component {
   }
 
   initChapters() {
-    return Promise.map(this.data.chapters, (data) =>
-      Promise.all([ data, import(`./chapters/${data.name}`)])
+    return Promise.map(this.story.config.chapters, (data) =>
+      Promise.all([ data, import(`./stories/${config.story}/chapters/${data.name}`)])
       .then(([data, template]) => {
         data.template = template.default;
         return data
@@ -427,22 +208,45 @@ class App extends Component {
     .then(chapters => this.chapters = chapters)
   }
 
-  updateLists() {
-    return this.trello.get(`/1/board/${this.idBoard}/lists`)
-    .then((listData) => {
-      this.lists = listData.reduce((obj, data) => {
-        const codename = _.findKey(this.data.lists, l => l.name.toLowerCase() === data.name.toLowerCase());
-        const listConfig = this.data.lists[codename];
-        if (codename) {
-          obj[codename] = {
-            id: data.id,
-            cards: [],
-            includeBotCards: listConfig.includeBotCards
-          };
-        }
-        return obj;
-      }, {});
-    });
+  getTrelloData() {
+    return this.trello.get(`/1/boards/${this.idBoard}`, {
+      labels: 'all',
+      lists: 'open',
+      cards: 'visible',
+      card_stickers: true,
+      card_attachments: true,
+      card_checklists: 'all',
+      card_actions: 'createCard'
+    })
+    .then(board => {
+      this.setBoard(board);
+      this.parseLists(board.lists);
+      this.parseCards(board.cards);
+      this.parseLabels(board.labels);
+    })
+    .catch(() => { throw new Error('Unable to load board') });
+  }
+
+  parseLists(listData) {
+    this.lists = listData.reduce((obj, data) => {
+      const codename = _.findKey(this.story.config.lists, l => l.name.toLowerCase() === data.name.toLowerCase());
+      const listConfig = this.story.config.lists[codename];
+      if (codename) {
+        obj[codename] = {
+          id: data.id,
+          cards: [],
+          includeBotCards: listConfig.includeBotCards
+        };
+      }
+      return obj;
+    }, {});
+  }
+
+  parseLabels(labelData) {
+    this.labels = labelData.reduce((labels, data) => {
+      labels[data.color] = data.name;
+      return labels;
+    }, {});
   }
 
   findListById(id) {
@@ -458,6 +262,19 @@ class App extends Component {
     return this.getCards(listName).map(card => card.name.trim())
   }
 
+  getCardNamesAndImages(listName) {
+    return this.getCards(listName).map(card => ({
+      name: card ? card.name.trim() : '_____',
+      image: this.getAttachmentUrl(card)
+    }));
+  }
+
+  getAttachmentUrl(card) {
+    if (card == null) return null;
+    const attachment = card.attachments.find((a) => a.previews[4] != null)
+    return attachment ? attachment.previews[4].url : null;
+  }
+
   findCard(listName, cardName) {
     const cards = this.getCards(listName);
     return cards.find(card =>
@@ -467,57 +284,43 @@ class App extends Component {
     )
   }
 
-  updateCards() {
-    return this.trello.get(`/1/board/${this.idBoard}/cards`, {
-      stickers: true,
-      attachments: true,
-      checklists: 'all',
-      actions: 'createCard'
-    })
-    .then((cardData) => {
-      cardData
-      .map(card => [card, this.findListById(card.idList)])
-      .filter(([card, list]) =>
-        list && (list.includeBotCards ||
-        // ignore cards storybot created
-        !card.actions.find(({ type, idMemberCreator }) =>
-          type === 'createCard' && idMemberCreator === config.idMember
-        ))
-      )
-      .forEach(([card, list]) => list && list.cards.push(card));
-    });
-  }
-
-  getAttachmentUrl(card) {
-    if (card == null) return null;
-    const attachment = card.attachments.find((a) => a.previews[4] != null)
-    return attachment ? attachment.previews[4].url : null;
+  parseCards(cardData) {
+    cardData
+    .map(card => [card, this.findListById(card.idList)])
+    .filter(([card, list]) =>
+      list && (list.includeBotCards ||
+      // ignore cards storybot created
+      !card.actions.find(({ type, idMemberCreator }) =>
+        type === 'createCard' && idMemberCreator === config.botIdMember
+      ))
+    )
+    .forEach(([card, list]) => list && list.cards.push(card));
   }
 
   // Processing data
 
   processData() {
-    this.processStoryInput();
+    this.setState(this.story.parseTrelloData());
     return Promise.all([
       this.createLists(),
       this.createCards(),
+      this.setLabels(),
       // either moves to a new chapter, or creates the chapter card:
       this.processChaptersState(),
-      // this.decorateCards(),
     ]);
   }
 
   // auto-create lists when they can be created
   createLists() {
     const lists = _.map(
-      this.data.lists,
+      this.story.config.lists,
       (config, codename) => _.extend(config, { codename })
     );
     return Promise.each(lists, ({ codename, name, cards, canBeCreated }) => {
       canBeCreated = canBeCreated || (() => true)
-      if (this.lists[codename] == null && canBeCreated()) {
+      if (this.lists[codename] == null && canBeCreated.call(this)) {
         const createList = this.trello.post(`/1/lists`, {
-          idBoard: this.board.id,
+          idBoard: this.idBoard,
           name,
           pos: 'bottom'
         });
@@ -535,9 +338,11 @@ class App extends Component {
 
   // auto-create cards when they can be created
   createCards() {
-    return Promise.each(_.values(this.data.cards), (cardData) => {
+    return Promise.each(_.values(this.story.config.cards), (cardData) => {
       const list = this.lists[cardData.list];
-      if (!list || list.cards.find((card) => card.name === cardData.name)) return;
+      // by default, cards won't be recreated if they exist anywhere on the board
+      const scope = (cardData.unique === false) ? list.cards : this.state.board.cards;
+      if (scope == null || scope.find((card) => card.name === cardData.name)) return;
       if (cardData.canBeCreated && cardData.canBeCreated()) {
         return this.createCard(cardData);
       }
@@ -552,6 +357,9 @@ class App extends Component {
       delete data.list
     }
     if (!data.idList) return Promise.reject(new Error(`No list specified for createCard`));
+    if (data.addBotMember) {
+      data.idMembers = (data.idMembers || []).concat(config.botIdMember);
+    }
     const createCard = this.trello.post('/1/cards', _.omit(data, 'attachment'));
     if (data.attachment) {
       createCard.then(card =>
@@ -559,6 +367,30 @@ class App extends Component {
       )
     }
     return createCard;
+  }
+
+  // auto-create labels when they can be created
+  setLabels() {
+    const labels = _.map(this.story.config.labels, (label, color) => {
+      label.color = color;
+      return label;
+    });
+    return Promise.each(labels, (data) => {
+      const { name, color, canBeCreated } = data;
+      if (canBeCreated && !canBeCreated()) return;
+
+      if (this.labels[color] == null) {
+        return this.trello.post(
+          `/1/board/${this.idBoard}/labels`,
+          { name, color }
+        );
+      } else if (this.labels[color] !== name) {
+        return this.trello.put(
+          `/1/board/${this.idBoard}/labelNames/${color}`,
+          { value: name }
+        );
+      }
+    });
   }
 
   checkItemsInSequence(checklist) {
@@ -573,12 +405,18 @@ class App extends Component {
     if (this.lists.story) {
       this.chaptersCard = this.findCard(
         'story',
-        this.data.cards.chapters.name
+        this.story.config.cards.chapters.name
       );
       if (!this.chaptersCard || this.chaptersCard.checklists.length === 0) {
-        this.createChaptersCard();
+        return this.createChaptersCard();
       } else if (!this.checkItemsInSequence(this.chaptersCard.checklists[0])) {
-        this.updateChapterChecklist();
+        return Promise.all([
+          this.trello.post(
+            `/1/cards/${this.chaptersCard.id}/actions/comments`, {
+              text: "You can't skip chapters!"
+          }),
+          this.updateChapterChecklist()
+        ]);
       } else {
         let uncheckedIndex = _.findIndex(
           this.chaptersCard.checklists[0].checkItems,
@@ -591,7 +429,7 @@ class App extends Component {
 
   createChaptersCard() {
     if (this.creatingCard) return this.creatingCard;
-    return this.creatingCard = this.createCard(this.data.cards.chapters)
+    return this.creatingCard = this.createCard(this.story.config.cards.chapters)
     .then(card =>
       Promise.all([
         card,
@@ -603,7 +441,7 @@ class App extends Component {
         name: 'Book',
         url: 'https://media.giphy.com/media/11I8v5lE8uq79C/giphy.gif'
       })
-      Promise.each(this.chapters, (chapter) =>
+      return Promise.each(this.chapters, (chapter) =>
         this.trello.post(`/1/checklists/${checklist.id}/checkItems`, {
           name: chapter.title
         })
@@ -618,7 +456,7 @@ class App extends Component {
     }
     const checklist = this.chaptersCard.checklists[0];
     // hit & hope update each checkitem
-    Promise.map(this.chapters, (chapter, index) => {
+    return Promise.map(this.chapters, (chapter, index) => {
       const checkItem = checklist.checkItems[index];
       const shouldBeChecked = index < this.state.chapter;
       const expectedState = shouldBeChecked ? 'complete' : 'incomplete';
@@ -630,42 +468,20 @@ class App extends Component {
     });
   }
 
-  decorateCards() {
-    if (this.lists.feelings && this.lists.feelings.cards.length) {
-      return Promise.all(
-        this.lists.feelings.cards.filter(card => card.attachments.length === 0)
-        .map(card =>
-          this.getGiphyImage(card.name)
-          .then(giphy => {
-            const url = _.get(giphy, 'data.images.fixed_height.url')
-            if (url) {
-              return this.trello.post(`/1/cards/${card.id}/attachments`, { url });
-            }
-          })
-        )
-      )
-    }
-  }
-
-  getGiphyImage(name) {
-    return rp.get(
-      `http://api.giphy.com/v1/gifs/translate?api_key=dc6zaTOxFJmzC&s=${name}`,
-      { json: true }
-    )
-  }
-
   //
 
-  areChapterPrerequisitesMet(index) {
+  areChapterPrerequisitesMet(index, silent = false) {
     return _.every(this.chapters.slice(0, index+1).map(chapter => {
       try {
         _.isFunction(chapter.canView) && chapter.canView();
         return true;
       } catch (err) {
-        this.trello.post(
-          `/1/cards/${this.chaptersCard.id}/actions/comments`, {
-            text: err.message
-        });
+        if (!silent) {
+          this.trello.post(
+            `/1/cards/${this.chaptersCard.id}/actions/comments`, {
+              text: err.message
+          });
+        }
         return false;
       }
     }))
@@ -685,6 +501,8 @@ class App extends Component {
     if (this.currentChapter === index) return;
 
     if (!this.areChapterPrerequisitesMet(index)) {
+      const backtrackTo = _.range(index-1, -1, -1).find(this.areChapterPrerequisitesMet.bind(this));
+      this.goToChapter(backtrackTo);
       return this.updateChapterChecklist();
     }
     let pageIndex = this.firstLoad && this.firstChapter === index
@@ -720,9 +538,6 @@ class App extends Component {
   }
 
   movePage(delta) {
-    if (this.state.chapter === 0 && this.state.page === 0) {
-      document.body.webkitRequestFullscreen();
-    }
     this.goToPage(this.state.page + delta);
   }
 
@@ -753,91 +568,249 @@ class App extends Component {
     if (page && page.canView != null && !page.canView()) {
       this.setState({ page: Math.max(0, this.state.page - 1) })
     }
-  }
-
-  onBoardIdKeyUp(ev) {
-    const regex = new RegExp('^(?:https://trello.com/b/)?([a-z0-9]{8})($|/| )', 'i');
-    const matches = ev.target.value.match(regex);
-    if (matches) {
-      window.location.href = `?idBoard=${matches[1]}`;
-    }
+    this.forceUpdate()
   }
 
   startAuth() {
-    window.Trello.authorize({
-      type: 'popup',
-      name: 'Story Board',
-      scope: {
-        read: 'true',
-        write: 'true'
-      },
-      success: function() {
-        window.Trello.members.get('me', function() { console.log('member', arguments) }, function(err) { console.error(err) });
-      },
-      error: () => console.log('error', ...arguments),
+    window.location.href =
+      'https://trello.com/1/authorize?' +
+      qs.stringify({
+        response_type: 'fragment',
+        key: config.appKey,
+        redirect_uri: window.location.href.replace(/#.*$/, ''),
+        scope: 'read,write',
+        name: 'Story Board',
+        expiration: '1day'
+      });
+  }
+
+  reset() {
+    sessionStorage.clear()
+    this.setUrl(false);
+    window.location.reload();
+  }
+
+  getMemberDetails() {
+    const fields = ['username', 'fullName', 'avatarHash'];
+    const details = fields.reduce((obj, field) => {
+      obj[field] = window.sessionStorage.getItem(field);
+      return obj
+    }, {});
+    return (
+      _.some(details, _.isNull)
+        ? this.trello.get('/me', { fields: fields.join(',')})
+        : Promise.resolve(details)
+    )
+    .then(details => {
+      this.setState(details);
+      return details;
     });
+  }
+
+  _dateFromObjectId(id) {
+    return new Date(parseInt(id.substring(0, 8), 16) * 1000);
+  }
+
+  getExistingBoards() {
+    return this.trello.get('/boards')
+    .then(boards => {
+      return Promise.all(
+        boards
+        .filter(board => board.name === this.getStoryBoardTitle())
+        .map(board => Promise.all([
+          board,
+          this.trello.get(`/1/board/${board.id}/cards`, {
+            idBoard: board.id,
+            checklists: 'all'
+          })
+        ]))
+      )
+    })
+    .then(boardAndCards =>
+      boardAndCards.map(([board, cards]) => {
+        const chaptersCard = cards.find(card =>
+          card.name === this.story.config.cards.chapters.name && card.checklists.length === 1
+        )
+        if (chaptersCard) {
+          const uncompletedChapters = chaptersCard.checklists[0].checkItems
+            .map((item, index) => { item.index = index; return item; })
+            .filter(item => item.state === 'incomplete')
+          board.latestChapter = uncompletedChapters.shift()
+        }
+        board.date = moment(board.dateLastActivity).fromNow();
+        return board
+      })
+    )
+    .then(boards => _.sortBy(boards, 'dateLastActivity'))
+    .then(existingBoards => this.setState({ existingBoards }));
+  }
+
+  existingBoardSubmit(ev) {
+    ev.preventDefault()
+    this.setBoardId(ev.target.idBoard.value);
+    this.loadInitialData();
+  }
+
+  renderMessage() {
+    return <div className="hint hint--trello"><p>{this.state.message}</p></div>
+  }
+
+  renderError() {
+    return <div className="error">
+      <p>{this.state.error}</p>
+      <p>(that's an error, sorry)</p>
+      <p><button className="button button--primary" onClick={this.reset.bind(this)}>Start Again</button></p>
+    </div>
+  }
+
+  renderStory() {
+    this.setUrl();
+
+    const chapter = this.chapter;
+    const ChapterTemplate = chapter.template;
+    return <div className="App">
+      { ChapterTemplate
+        ? <ChapterTemplate
+            {...chapter.props}
+            config={this.story.config}
+            title={chapter.title}
+            page={this.state.page}
+            setPages={this.setPages.bind(this)}
+            movePage={this.movePage.bind(this)}
+          />
+        : <div>{chapter.title || `Chapter "${chapter.name}"`} has no pages</div>
+      }
+      {(this.state.page === this.state.pageCount-1) && (this.state.chapter < this.chapters.length-1) && (this.areChapterPrerequisitesMet(this.state.chapter+1, true)) &&
+        <p className="hint hint--trello">Click the `{chapter.title}` check box on the Chapters card to finish this chapter and move onto the next one</p>
+      }
+      {this.state.pageCount > 1 &&
+        <nav className="pagination">
+          {this.state.page > 0
+            ? <button className="page-change page-change--prev icon-arrow-left2" onClick={() => this.movePage(-1)} title="Go to previous page"></button>
+            : <span className="page-change page-change--prev"></span>
+          }
+          <div className="pageNumber">
+            <div>{this.story.config.title} chapter {this.state.chapter+1} ‘{chapter.title}’</div>
+            <div>page {this.state.page+1} of {this.state.pageCount}</div>
+            <div className="footer">
+              <a className="open-board subtle-link" href={this.state.board.url}>Open Trello board</a>
+              <button className="subtle-link" onClick={this.reset.bind(this)}>Save my place and sign out</button>
+            </div>
+          </div>
+          {this.state.pageCount > this.state.page+1 && this.canViewPage(this.state.page+1)
+            ? <button className="page-change page-change--next icon-arrow-right2" onClick={() => this.movePage(1)} title="Go to next page"></button>
+            : <span className="page-change page-change--next"></span>
+          }
+        </nav>
+      }
+    </div>
+  }
+
+  renderSetup() {
+    const { authed, loading, username, avatarHash, fullName, existingBoards } = this.state;
+    const hasExistingBoards = !_.isEmpty(existingBoards)
+    return <div className="splash">
+      <h1>Story Board</h1>
+      <p className="strapline">Interactive Storytrelling</p>
+
+      {!authed &&
+        <div>
+          <p>To begin the story, we first need to connect to your Trello account.</p>
+          <p>You'll use a Trello board to interact with this story.</p>
+          <button className="button button--primary" onClick={this.startAuth.bind(this)}>Connect to Trello</button>
+          <p className="small-print">
+            This is safe and secure.
+            The authorization token we obtain for your Trello account is stored in your browser and nowhere else. It is automatically cleared when you close your browser, or you can sign out at any time. None of the data in your Trello account will be accessed or changed, apart from the board we create for this story, and listing your existing boards to allow you to continue a story later.
+            But if you don't want to trust a random website with your all the Trello-y goodness in your Trello account, why not just create a new Trello account just for this? They are free, afterall!
+          </p>
+        </div>
+      }
+
+      {loading && <div className="loading">Loading…</div>}
+
+      {(authed && username) &&
+        <div>
+          <div className="trello-member">
+            <h2>
+              <img src="/images/trello-mark-white.png" alt="Trello"/>
+              You're signed into Trello as
+            </h2>
+            {avatarHash && <img className="avatar" alt="" src={`https://trello-avatars.s3.amazonaws.com/${avatarHash}/50.png`} />}
+            <span className="trello-fullName">{fullName}</span>
+            <span className="trello-username">@{username}</span>
+            <button className="button change-trello-account" onClick={this.reset}>Change</button>
+          </div>
+          {existingBoards === null && <div>Loading…</div>}
+
+          {existingBoards !== null &&
+            <div>
+              <h2>{this.story.config.title}</h2>
+              {!_.isEmpty(existingBoards) &&
+                <form onSubmit={this.existingBoardSubmit.bind(this)} className="existing-stories">
+                  <p>You have started this story before.</p>
+                  {existingBoards.length === 1
+                    ? <div>
+                        <input name="idBoard" type="hidden" value={existingBoards[0].id} />
+                        <button type="submit" className="button button--primary">Continue from {existingBoards[0].date}</button>
+                        <p className="smaller">{existingBoards[0].latestChapter && existingBoards[0].latestChapter.index > 0
+                            ? `You were up to chapter ${existingBoards[0].latestChapter.index+1} ‘${existingBoards[0].latestChapter.name}’`
+                            : `You were at the beginning`
+                          }</p>
+                          <p className="small-print">You can remove an old story by closing the board in Trello.</p>
+                      </div>
+                    : <div>
+                        <p>
+                          Continue from&nbsp;
+                          <select name="idBoard">
+                            {existingBoards.reverse().map(board =>
+                              <option key={`board${board.id}`} value={board.id}>
+                                {board.latestChapter && board.latestChapter.index > 0
+                                  ? `${board.date} (at chapter ${board.latestChapter.index+1} ‘${board.latestChapter.name}’)`
+                                  : `${board.date} (at the beginning)`
+                                }
+                              </option>
+                            )}
+                          </select>?
+                        </p>
+                        <p><button type="submit" className="button button--primary">Continue the Story</button></p>
+                        <p className="small-print">You can remove old stories by closing the boards in Trello.</p>
+                      </div>
+                  }
+                </form>
+              }
+              <div>
+                {hasExistingBoards
+                  ? <button className="button" onClick={this.createBoard.bind(this)}>
+                      Begin Story Again
+                    </button>
+                  : <button className="button button--primary" onClick={this.createBoard.bind(this)}>
+                      Begin Story
+                    </button>
+                }
+                <p className="smaller">This will create a new board in your Trello account called ‘{this.getStoryBoardTitle()}`<br/> and add Story Bot as a member of it.</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  renderLoading() {
+    return <div className="loading"><img src={loading} alt="Loading…" title="Loading…" /></div>
   }
 
   render() {
     if (this.state.message) {
-      return <div className="hint hint--trello"><p>{this.state.message}</p></div>
+      return this.renderMessage();
     } else if (this.state.error) {
-      return <div className="error">
-               <p>{this.state.error}</p>
-               <p>(that's an error, sorry)</p>
-              </div>
+      return this.renderError();
     } else if (this.state.dataLoaded) {
-      this.setUrl();
-      const chapter = this.chapter;
-      const ChapterTemplate = chapter.template;
-      return (
-        <div className="App">
-          { ChapterTemplate
-            ? <ChapterTemplate
-                {...chapter.props}
-                config={this.data}
-                title={chapter.title}
-                page={this.state.page}
-                setPages={this.setPages.bind(this)}
-                movePage={this.movePage.bind(this)}
-              />
-            : <div>{chapter.title || `Chapter "${chapter.name}"`} has no pages</div>
-          }
-          {(this.state.page === this.state.pageCount-1) && (this.state.chapter < this.chapters.length-1) &&
-            <p className="hint hint--trello">Click the `{chapter.title}` check box on the Chapters card to finish this chapter and move onto the next one</p>
-          }
-          {this.state.pageCount > 1 &&
-            <nav className="pagination">
-              {this.state.page > 0
-                ? <button className="page-change page-change--prev icon-arrow-left2" onClick={() => this.movePage(-1)} title="Go to previous page"></button>
-                : <span className="page-change page-change--prev"></span>
-              }
-              <div className="pageNumber">
-                <div>{chapter.title}</div>
-                <div>page {this.state.page+1} of {this.state.pageCount}</div>
-              </div>
-              {this.state.pageCount > this.state.page+1 && this.canViewPage(this.state.page+1)
-                ? <button className="page-change page-change--next icon-arrow-right2" onClick={() => this.movePage(1)} title="Go to next page"></button>
-                : <span className="page-change page-change--next"></span>
-              }
-            </nav>
-          }
-        </div>
-      );
-    } else if (!this.idBoard) {
-      return <div className="error">
-        <h1>Story Board</h1>
-        <p className="strapline">Interactive Storytrelling</p>
-
-        {this.state.readyToAuth &&
-          <button onClick={this.startAuth}>Authorize Trello</button>
-        }
-
-        <p>Add <em>@storybot</em> to an empty Trello board and paste the board URL here:</p>
-        <input type="text" ref="idBoard" placeholder="e.g. https://trello.com/b/V8y9r5tF" onKeyUp={this.onBoardIdKeyUp} />
-      </div>
+      return this.renderStory();
+    } else if (!this.state.idBoard) {
+      return this.renderSetup();
     } else {
-      return <div className="loading">Loading…</div>
+      return this.renderLoading();
     }
   }
 }
