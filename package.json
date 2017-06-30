@@ -11,7 +11,7 @@
     "start": "concurrently \"npm run start-server\" \"cd client && npm start\"",
     "start-server": "node server/src/index.js",
     "test": "mocha test/",
-    "postinstall": "cd client && npm run build"
+    "postinstall": "cd client && npm i && npm run build"
   },
   "repository": {
     "type": "git",
