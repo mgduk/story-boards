@@ -341,8 +341,8 @@ class App extends Component {
     return Promise.each(_.values(this.story.config.cards), (cardData) => {
       const list = this.lists[cardData.list];
       // by default, cards won't be recreated if they exist anywhere on the board
-      const scope = (cardData.unique === false) ? list.cards : this.state.board.cards;
-      if (scope == null || scope.find((card) => card.name === cardData.name)) return;
+      const scope = (cardData.unique === false) ? list : this.state.board;
+      if (scope == null || (scope.cards || []).find((card) => card.name === cardData.name)) return;
       if (cardData.canBeCreated && cardData.canBeCreated()) {
         return this.createCard(cardData);
       }
