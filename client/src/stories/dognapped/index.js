@@ -159,11 +159,11 @@ export default function(app) {
           canBeCreated: () => app.chapter.name === 'beginning'
         },
         objects: {
-          name: 'Things you might find around the house',
+          name: 'Small things you might find around the house',
           cards: [
             {
               name: "e.g. ‘a spoon’ or ‘football boot’",
-              desc: "Ideally these are fairly small objects (so no ‘sofas’) which you can have one of (so no ‘dust’)",
+              desc: "Ideally these are things you could hold in your hand (so no ‘sofas’) which you can have one of (so no ‘dust’)",
               addBotMember: true
             }
           ],

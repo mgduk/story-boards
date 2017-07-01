@@ -720,8 +720,8 @@ class App extends Component {
           <button className="button button--primary" onClick={this.startAuth.bind(this)}>Connect to Trello</button>
           <p className="small-print">
             This is safe and secure.
-            The authorization token we obtain for your Trello account is stored in your browser and nowhere else. It is automatically cleared when you close your browser, or you can sign out at any time. None of the data in your Trello account will be accessed or changed, apart from the board we create for this story, and listing your existing boards to allow you to continue a story later.
-            But if you don't want to trust a random website with your all the Trello-y goodness in your Trello account, why not just create a new Trello account just for this? They are free, afterall!
+            The authorization token we obtain for your Trello account is only ever stored in your browser and nowhere else. It is automatically cleared when you close your browser, or you can sign out at any time. None of the data in your Trello account will be accessed or changed, apart from the board we create for this story, and listing your existing boards to allow you to continue a story later.
+            But if you don't want to trust a random website with all the Trello-y goodness in your Trello account, why not create a new Trello account just for this? They are free, after all!
           </p>
         </div>
       }

@@ -160,12 +160,9 @@ a:hover {
   color: #BCD9EA;
 }
 
-input[type] {
-  font-family: 'Pangolin', sans-serif;
-  font-size: 1.33em;
-  width: 20em;
-  text-align: center;
-}
+
+
+
 
 select {
   font-family: 'Pangolin', sans-serif;
@@ -454,7 +451,7 @@ button.page-change:hover {
 
 .splash {
   text-align: center;
-  width: 31em;
+  max-width: 31em;
   margin: 0 auto;
   font-size: 0.8em;
 }
