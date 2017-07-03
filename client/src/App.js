@@ -803,6 +803,7 @@ class App extends Component {
     const chapter = this.chapter;
     const ChapterTemplate = chapter.template;
     return <div className="App">
+      {this.state.page === 0 && <h1 className="chapter-title">Chapter {this.state.chapter+1}:<br />{chapter.title}</h1>}
       { ChapterTemplate
         ? <ChapterTemplate
             {...chapter.props}
