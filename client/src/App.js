@@ -671,7 +671,11 @@ class App extends Component {
     return <div className="error">
       <p>{this.state.error}</p>
       <p>(that's an error, sorry)</p>
-      <p><button className="button button--primary" onClick={this.reset.bind(this)}>Start Again</button></p>
+      <p><button className="button button--primary" onClick={this.loadInitialData.bind(this)}>Try again</button></p>
+      <p>
+        <button className="button" onClick={this.reset.bind(this)}>Reset</button>
+        (your place has been autosaved)
+      </p>
     </div>
   }
 
