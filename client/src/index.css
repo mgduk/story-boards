@@ -268,7 +268,13 @@ code {
   min-height: 1.46em;
 }
 
+.hint.hint--highlight {
+  animation: 0.3s ease-out 2 flash;
+}
 
+@keyframes flash {
+  50% { background-color: #F3E260; }
+}
 
 .pagination {
   margin-top: 3em;

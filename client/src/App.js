@@ -58,6 +58,7 @@ class App extends Component {
       idBoard: this.idBoard,
       dataLoaded: false,
       chapter: 0,
+      pages: [],
       page: 0,
       pageCount: null,
       existingBoards: null,
@@ -114,10 +115,10 @@ class App extends Component {
 
   onWindowKeyDown(ev) {
     if (ev.key === 'ArrowRight') {
-      this.goToPage(this.state.page+1);
+      this.movePage(1);
     }
     else if (ev.key === 'ArrowLeft') {
-      this.goToPage(this.state.page-1);
+      this.movePage(-1);
     } else if (ev.key === 'f' && this.state.dataLoaded) {
       document.body.webkitRequestFullscreen();
     }
@@ -145,6 +146,12 @@ class App extends Component {
   componentWillMount() {
     if (!this.idBoard) return;
     this.loadInitialData()
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.page !== this.state.page) {
+      this.setCanViewNext(nextState.page);
+    }
   }
 
   getStoryBoardTitle() {
@@ -313,6 +320,7 @@ class App extends Component {
 
   processData() {
     this.setState(this.story.parseTrelloData());
+    this.setCanViewNext(this.state.page);
     return Promise.all([
       this.createLists(),
       this.createCards(),
@@ -517,7 +525,7 @@ class App extends Component {
       this.goToChapter(backtrackTo);
       return this.updateChapterChecklist();
     }
-    let pageIndex = this.firstLoad && this.firstChapter === index
+    let pageIndex = this.firstLoad && this.firstChapter === index && this.canViewPage(this.firstPage)
       ? this.firstPage || 0
       : 0;
     this.setState({
@@ -529,28 +537,40 @@ class App extends Component {
     this.currentChapter = index;
   }
 
-  goToPage(index) {
+  goToPage(index, keepInRange = true) {
     const { pageCount } = this.state;
-    if (pageCount < 2) return;
+    if (pageCount < 2) return false;
 
-    if (index >= pageCount) {
-      index = pageCount-1;
-    }
-    else if (index < 0) {
-      index = 0;
+    if (keepInRange) {
+      if (index >= pageCount) {
+        index = pageCount-1;
+      }
+      else if (index < 0) {
+        index = 0;
+      }
     }
     if (this.canViewPage(index)) {
       this.setState({ page: index })
+    } else if (index >= this.state.pageCount) {
+      const hint = document.querySelector('.hint');
+      if (hint && !this.hintHighlightInProgress) {
+        hint.classList.add('hint--highlight');
+        this.hintHighlightInProgress = _.delay(() => {
+          hint.classList.remove('hint--highlight')
+          delete this.hintHighlightInProgress;
+        }, 1000);
+      }
     }
   }
 
   canViewPage(index) {
+    if (index < 0 || index > this.state.pageCount-1) return false;
     const fx = this.state.canViewPage[index];
     return !fx || fx();
   }
 
   movePage(delta) {
-    this.goToPage(this.state.page + delta);
+    this.goToPage(this.state.page + delta, false);
   }
 
   get chapter() {
@@ -571,16 +591,24 @@ class App extends Component {
   }
 
   setPages(pages) {
-    this.setState({
-      pageCount: pages.length,
-      canViewPage: _.map(pages, 'canView')
-    })
     // if the current page's prerequisites aren't yet met, move back a page
     const page = pages[this.state.page];
     if (page && page.canView != null && !page.canView()) {
       this.setState({ page: Math.max(0, this.state.page - 1) })
     }
+    this.setState({
+      pages,
+      pageCount: pages.length,
+      canViewPage: _.map(pages, 'canView'),
+    })
     this.forceUpdate()
+  }
+
+  setCanViewNext(currentPageIndex) {
+    const nextPage = this.state.pages[currentPageIndex+1];
+    this.setState({
+      canViewNextPage: nextPage && ((nextPage.canView) ? nextPage.canView() : true)
+    });
   }
 
   startAuth() {
