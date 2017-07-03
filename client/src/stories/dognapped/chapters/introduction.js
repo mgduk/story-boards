@@ -44,7 +44,7 @@ export default class Introduction extends Chapter {
             </li>
           ) }
         </ul>
-        { this.props.story.characters.length < 3 &&
+        { this.props.story.characters.length > 0 && this.props.story.characters.length < 3 &&
           <p className="hint hint--trello">We'll need three characters for this story!</p>
         }
         { this.props.story.characters.length >= 3 && !this.props.story.characters.find(c => c.image) &&
