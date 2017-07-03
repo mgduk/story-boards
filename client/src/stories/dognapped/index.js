@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import converter from 'number-to-words';
 import capitalize from 'capitalize';
+import lcfirst from 'lcfirst';
 
 export default function(app) {
   const coinImageUrl = 'https://cdn.glitch.com/59eb59af-6a74-424b-b78d-47a120942668%2Fcoin.jpg?1498515332815';
@@ -314,18 +315,30 @@ export default function(app) {
     parseTrelloData: function() {
       return {
         characters: app.getCardNamesAndImages('characters'),
-        places: app.getCardNamesAndImages('places'),
-        activities: app.getCardNames('activities'),
-        objects: app.getCardNames('objects'),
-        foods: app.getCardNames('foods'),
-        feelings: app.getCardNamesAndImages('feelings'),
-        dragonFood: app.getCards('dragonFood').map(app.getAttachmentUrl).filter(_.identity),
+        places: app.getCardNamesAndImages('places')
+          .map(({ name, image }) => {
+            if (name.match(/^(my|the|in|on|inside|under|behind|a|where)\b/i)) {
+              name = lcfirst(name);
+            }
+            return { name, image };
+          }),
+        activities: app.getCardNames('activities', true).map(lcfirst),
+        objects: app.getCardNames('objects', true).map(lcfirst),
+        foods: app.getCardNames('foods').map(lcfirst),
+        feelings: app.getCardNamesAndImages('feelings')
+          .map(({ name, image }) => ({ name: lcfirst(name), image })),
+        dragonFood: app.getCards('dragonFood')
+          .map(app.getAttachmentUrl)
+          .filter(_.identity),
         bag: app.getCardNames('bag'),
-        robotBall: app.getCards('robotBall').map(({ name, labels }) => ({
-          name,
-          direction: labels[0] != null ? labels[0].name.toLowerCase() : null
-        })),
-        scaryFaces: app.getCards('scareTroll').map(app.getAttachmentUrl).filter(_.identity),
+        robotBall: app.getCards('robotBall')
+          .map(({ name, labels }) => ({
+            name,
+            direction: labels[0] != null ? labels[0].name.toLowerCase() : null
+          })),
+        scaryFaces: app.getCards('scareTroll')
+          .map(app.getAttachmentUrl)
+          .filter(_.identity),
         vendingMachine: app.getCards('vendingMachine').map(card => ({
           name: card.name,
           stickers: card.stickers,
