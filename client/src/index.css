@@ -511,6 +511,8 @@ button.page-change:not(.page-change--disabled):hover {
 
 .chapter-title {
   position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -533,8 +535,15 @@ button.page-change:not(.page-change--disabled):hover {
     transform: scale(1.2);
     opacity: 1;
   }
-  100% {
+  99% {
     transform: scale(200);
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+  }
+  100% {
+    width: 0;
+    height: 0;
     opacity: 0;
   }
 }
