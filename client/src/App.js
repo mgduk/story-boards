@@ -125,9 +125,9 @@ class App extends Component {
   }
 
   onSwipe(ev) {
-    if (ev.direction == Hammer.DIRECTION_LEFT) {
+    if (ev.direction === Hammer.DIRECTION_LEFT) {
       this.movePage(1);
-    } else if (ev.direction == Hammer.DIRECTION_RIGHT) {
+    } else if (ev.direction === Hammer.DIRECTION_RIGHT) {
       this.movePage(-1);
     }
   }
@@ -243,7 +243,10 @@ class App extends Component {
       this.parseCards(board.cards);
       this.parseLabels(board.labels);
     })
-    .catch(() => { throw new Error('Unable to load board') });
+    .catch((err) => {
+      console.log(err);
+      throw new Error('Unable to load board')
+    });
   }
 
   parseLists(listData) {
@@ -820,7 +823,7 @@ class App extends Component {
       }
       {this.state.pageCount > 1 &&
         <nav className="pagination">
-          <button className={`page-change page-change--prev icon-arrow-left2 ${this.state.page == 0 ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(-1)} title="Go to previous page"></button>
+          <button className={`page-change page-change--prev icon-arrow-left2 ${this.state.page === 0 ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(-1)} title="Go to previous page"></button>
           <div className="pageNumber">
             <div>{this.story.config.title} chapter {this.state.chapter+1} ‘{chapter.title}’</div>
             <div>page {this.state.page+1} of {this.state.pageCount}</div>
@@ -829,7 +832,7 @@ class App extends Component {
               <button className="subtle-link" onClick={this.reset.bind(this)}>Save my place and sign out</button>
             </div>
           </div>
-          <button className={`page-change page-change--next icon-arrow-right2 ${this.state.pageCount <= this.state.page+1 || !this.canViewPage(this.state.page+1) ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(1)} title="Go to next page"></button>
+          <button className={`page-change page-change--next icon-arrow-right2 ${!this.state.canViewNextPage ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(1)} title="Go to next page"></button>
         </nav>
       }
     </div>
