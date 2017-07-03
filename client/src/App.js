@@ -386,9 +386,7 @@ class App extends Component {
     }
     const createCard = this.trello.post('/1/cards', _.omit(data, 'attachment'));
     if (data.attachment) {
-      createCard.then(card =>
-        this.trello.post(`/1/cards/${card.id}/attachments`, data.attachment)
-      )
+      createCard.then(card => this.trello.post(`/1/cards/${card.id}/attachments`, data.attachment))
     }
     return createCard;
   }
@@ -529,7 +527,7 @@ class App extends Component {
       this.goToChapter(backtrackTo);
       return this.updateChapterChecklist();
     }
-    let pageIndex = this.firstLoad && this.firstChapter === index && this.canViewPage(this.firstPage)
+    let pageIndex = this.firstLoad && this.firstChapter === index
       ? this.firstPage || 0
       : 0;
     this.setState({
@@ -709,12 +707,11 @@ class App extends Component {
   renderError() {
     return <div className="error">
       <p>{this.state.error}</p>
-      <p>(that's an error, sorry)</p>
       <p><button className="button button--primary" onClick={this.loadInitialData.bind(this)}>Try again</button></p>
       <p>
         <button className="button" onClick={this.reset.bind(this)}>Reset</button>
-        (your place has been autosaved)
       </p>
+      <p className="smaller">Your place has been auto-saved.</p>
     </div>
   }
 
