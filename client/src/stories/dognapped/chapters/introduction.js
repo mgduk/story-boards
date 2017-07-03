@@ -41,14 +41,16 @@ export default class Introduction extends Chapter {
             </li>
           ) }
         </ul>
-        { this.props.story.characters.length === 0 || this.props.story.characters.find(c => c.image)
-          ? null
-          : <p className="hint hint--trello hint--subtle">You can add photos of the characters to the cards too!</p>
+        { this.props.story.characters.length < 3 &&
+          <p className="hint hint--trello">We'll need three characters for this story!</p>
+        }
+        { this.props.story.characters.length >= 3 && !this.props.story.characters.find(c => c.image) &&
+          <p className="hint hint--trello hint--subtle">You can add photos of the characters to the cards if you want to</p>
         }
       </div>
     ,
       {
-        canView: () => this.props.story.characters.length > 1,
+        canView: () => this.props.story.characters.length > 2,
         element:
           <div>
             <p>Now, open the “Chapters” card on the board.</p>
