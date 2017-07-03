@@ -545,6 +545,7 @@ button.page-change:not(.page-change--disabled):hover {
     width: 0;
     height: 0;
     opacity: 0;
+    transform: scale(0.5);
   }
 }
 
