@@ -679,43 +679,6 @@ class App extends Component {
     </div>
   }
 
-  renderStory() {
-    this.setUrl();
-
-    const chapter = this.chapter;
-    const ChapterTemplate = chapter.template;
-    return <div className="App">
-      { ChapterTemplate
-        ? <ChapterTemplate
-            {...chapter.props}
-            config={this.story.config}
-            title={chapter.title}
-            page={this.state.page}
-            setPages={this.setPages.bind(this)}
-            movePage={this.movePage.bind(this)}
-          />
-        : <div>{chapter.title || `Chapter "${chapter.name}"`} has no pages</div>
-      }
-      {(this.state.page === this.state.pageCount-1) && (this.state.chapter < this.chapters.length-1) && (this.areChapterPrerequisitesMet(this.state.chapter+1, true)) &&
-        <p className="hint hint--trello">Click the `{chapter.title}` check box on the Chapters card to finish this chapter and move onto the next one</p>
-      }
-      {this.state.pageCount > 1 &&
-        <nav className="pagination">
-          <button className={`page-change page-change--prev icon-arrow-left2 ${this.state.page == 0 ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(-1)} title="Go to previous page"></button>
-          <div className="pageNumber">
-            <div>{this.story.config.title} chapter {this.state.chapter+1} ‘{chapter.title}’</div>
-            <div>page {this.state.page+1} of {this.state.pageCount}</div>
-            <div className="footer">
-              <a className="open-board subtle-link" href={this.state.board.url}><span className="trello-icon"></span>Open Trello board</a>
-              <button className="subtle-link" onClick={this.reset.bind(this)}>Save my place and sign out</button>
-            </div>
-          </div>
-          <button className={`page-change page-change--next icon-arrow-right2 ${this.state.pageCount <= this.state.page+1 || !this.canViewPage(this.state.page+1) ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(1)} title="Go to next page"></button>
-        </nav>
-      }
-    </div>
-  }
-
   renderSetup() {
     const { authed, loading, username, avatarHash, fullName, existingBoards } = this.state;
     const hasExistingBoards = !_.isEmpty(existingBoards)
@@ -802,6 +765,43 @@ class App extends Component {
             </div>
           }
         </div>
+      }
+    </div>
+  }
+
+  renderStory() {
+    this.setUrl();
+
+    const chapter = this.chapter;
+    const ChapterTemplate = chapter.template;
+    return <div className="App">
+      { ChapterTemplate
+        ? <ChapterTemplate
+            {...chapter.props}
+            config={this.story.config}
+            title={chapter.title}
+            page={this.state.page}
+            setPages={this.setPages.bind(this)}
+            movePage={this.movePage.bind(this)}
+          />
+        : <div>{chapter.title || `Chapter "${chapter.name}"`} has no pages</div>
+      }
+      {(this.state.page === this.state.pageCount-1) && (this.state.chapter < this.chapters.length-1) && (this.areChapterPrerequisitesMet(this.state.chapter+1, true)) &&
+        <p className="hint hint--trello">Click the `{chapter.title}` check box on the Chapters card to finish this chapter and move onto the next one</p>
+      }
+      {this.state.pageCount > 1 &&
+        <nav className="pagination">
+          <button className={`page-change page-change--prev icon-arrow-left2 ${this.state.page == 0 ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(-1)} title="Go to previous page"></button>
+          <div className="pageNumber">
+            <div>{this.story.config.title} chapter {this.state.chapter+1} ‘{chapter.title}’</div>
+            <div>page {this.state.page+1} of {this.state.pageCount}</div>
+            <div className="footer">
+              <a className="open-board subtle-link" href={this.state.board.url}><span className="trello-icon"></span>Open Trello board</a>
+              <button className="subtle-link" onClick={this.reset.bind(this)}>Save my place and sign out</button>
+            </div>
+          </div>
+          <button className={`page-change page-change--next icon-arrow-right2 ${this.state.pageCount <= this.state.page+1 || !this.canViewPage(this.state.page+1) ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(1)} title="Go to next page"></button>
+        </nav>
       }
     </div>
   }
