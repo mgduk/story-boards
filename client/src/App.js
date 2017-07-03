@@ -4,6 +4,7 @@ import './App.css';
 import Promise from 'bluebird';
 import qs from 'qs';
 import moment from 'moment';
+import Hammer from 'hammerjs';
 import Trello from './Trello';
 import loading from './loading.svg';
 import DognappedStory from './stories/dognapped';
@@ -77,6 +78,9 @@ class App extends Component {
       }
     });
 
+    this.hammertime = new Hammer(document.documentElement);
+    this.hammertime.on('swipe', this.onSwipe.bind(this));
+
     window.trelloStory = this;
   }
 
@@ -116,6 +120,14 @@ class App extends Component {
       this.goToPage(this.state.page-1);
     } else if (ev.key === 'f' && this.state.dataLoaded) {
       document.body.webkitRequestFullscreen();
+    }
+  }
+
+  onSwipe(ev) {
+    if (ev.direction == Hammer.DIRECTION_LEFT) {
+      this.movePage(1);
+    } else if (ev.direction == Hammer.DIRECTION_RIGHT) {
+      this.movePage(-1);
     }
   }
 
