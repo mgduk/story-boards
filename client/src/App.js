@@ -150,8 +150,9 @@ class App extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextState.page !== this.state.page) {
-      this.setCanViewNext(nextState.page);
+      this.setCanViewNext(this.state.pages, nextState.page);
     }
+    this.chapterChange = this.chapterChange || nextState.chapter !== this.state.chapter;
   }
 
   getStoryBoardTitle() {
@@ -323,7 +324,7 @@ class App extends Component {
 
   processData() {
     this.setState(this.story.parseTrelloData());
-    this.setCanViewNext(this.state.page);
+    this.setCanViewNext(this.state.pages, this.state.page);
     return Promise.all([
       this.createLists(),
       this.createCards(),
@@ -521,7 +522,7 @@ class App extends Component {
     } else if (index < 0) {
       index = 0
     }
-    if (this.currentChapter === index) return;
+    if (this.state.chapter === index) return;
 
     if (!this.areChapterPrerequisitesMet(index)) {
       const backtrackTo = _.range(index-1, -1, -1).find(this.areChapterPrerequisitesMet.bind(this));
@@ -533,16 +534,17 @@ class App extends Component {
       : 0;
     this.setState({
       chapter: index,
+      pages: [],
       page: pageIndex,
       pageCount: null
     })
     this.firstLoad = false
-    this.currentChapter = index;
   }
 
   goToPage(index, keepInRange = true) {
     const { pageCount } = this.state;
     if (pageCount < 2) return false;
+
 
     if (keepInRange) {
       if (index >= pageCount) {
@@ -551,6 +553,9 @@ class App extends Component {
       else if (index < 0) {
         index = 0;
       }
+    }
+    if (index > 0) {
+      this.chapterChange = false;
     }
     if (this.canViewPage(index)) {
       this.setState({ page: index })
@@ -595,20 +600,23 @@ class App extends Component {
 
   setPages(pages) {
     // if the current page's prerequisites aren't yet met, move back a page
-    const page = pages[this.state.page];
-    if (page && page.canView != null && !page.canView()) {
-      this.setState({ page: Math.max(0, this.state.page - 1) })
+    if (this.state.pages == null || this.state.pageCount !== pages.length) {
+      const page = pages[this.state.page];
+      if (page && page.canView != null && !page.canView()) {
+        this.setState({ page: Math.max(0, this.state.page - 1) })
+      }
+      this.setState({
+        pages,
+        pageCount: pages.length,
+        canViewPage: _.map(pages, 'canView'),
+      })
+      this.setCanViewNext(pages, this.state.page);
+      this.forceUpdate()
     }
-    this.setState({
-      pages,
-      pageCount: pages.length,
-      canViewPage: _.map(pages, 'canView'),
-    })
-    this.forceUpdate()
   }
 
-  setCanViewNext(currentPageIndex) {
-    const nextPage = this.state.pages[currentPageIndex+1];
+  setCanViewNext(pages, currentPageIndex) {
+    const nextPage = pages[currentPageIndex+1];
     this.setState({
       canViewNextPage: nextPage && ((nextPage.canView) ? nextPage.canView() : true)
     });
@@ -806,7 +814,7 @@ class App extends Component {
     const chapter = this.chapter;
     const ChapterTemplate = chapter.template;
     return <div className="App">
-      {this.state.page === 0 && <h1 className="chapter-title">Chapter {this.state.chapter+1}:<br />{chapter.title}</h1>}
+      {this.chapterChange && this.state.page === 0 && <h1 className="chapter-title">Chapter {this.state.chapter+1}:<br />{chapter.title}</h1>}
       { ChapterTemplate
         ? <ChapterTemplate
             {...chapter.props}
