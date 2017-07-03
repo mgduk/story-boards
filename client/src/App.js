@@ -702,7 +702,7 @@ class App extends Component {
             <div>{this.story.config.title} chapter {this.state.chapter+1} ‘{chapter.title}’</div>
             <div>page {this.state.page+1} of {this.state.pageCount}</div>
             <div className="footer">
-              <a className="open-board subtle-link" href={this.state.board.url}>Open Trello board</a>
+              <a className="open-board subtle-link" href={this.state.board.url}><span className="trello-icon"></span>Open Trello board</a>
               <button className="subtle-link" onClick={this.reset.bind(this)}>Save my place and sign out</button>
             </div>
           </div>

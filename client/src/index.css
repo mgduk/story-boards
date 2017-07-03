@@ -335,6 +335,14 @@ button.page-change:not(.page-change--disabled):hover {
 .icon-arrow-left2:before {
   content: "\ea40";
 }
+.trello-icon {
+  background: url(/images/trello-mark-white.png) left center no-repeat;
+  width: 1.33em;
+  height: 1.33em;
+  display: inline-block;
+  vertical-align: bottom;
+  background-size: 1em;
+}
 
 .subtle-link {
   border: none;
@@ -359,16 +367,11 @@ button.page-change:not(.page-change--disabled):hover {
   justify-content: center;
   margin-top: 1em;
 }
-.footer > * {
+.footer > .subtle-link {
   margin-left: 1em;
 }
-.footer > *:first-child {
+.footer > .subtle-link:first-child {
   margin-left: 0;
-}
-.open-board {
-  background: url(/images/trello-mark-white.png) left center no-repeat;
-  background-size: 1em;
-  padding-left: 1.33em;
 }
 
 .ball-screen {
@@ -497,4 +500,39 @@ button.page-change:not(.page-change--disabled):hover {
 }
 .tips li {
   margin-bottom: 0.5em;
+}
+
+
+
+@media only screen and (max-width: 645px) {
+  .pagination {
+    flex-wrap: wrap;
+    margin-top: 2em;
+  }
+  .page-change {
+    width: 50%;
+
+  }
+  .pageNumber {
+    width: 100%;
+    order: 1;
+    margin-top: 2em;
+  }
+  .footer {
+    margin-top: 0;
+    flex-wrap: wrap;
+  }
+  .footer > .subtle-link  {
+    display: block;
+    margin: 1.33em 0 0;
+    width: 100%;
+  }
+  .hint {
+    padding: 0.66em;
+    font-size: 0.8em;
+  }
+  .hint.hint--trello {
+    padding: 0.66em 0.66em 0.66em 2.67em;
+    background-size: 1.5em;
+  }
 }
