@@ -26,12 +26,12 @@ export default class Map extends Chapter {
         <p>The boy jumps up, drops a ragged piece of paper onto {person(1)}'s lap, and skips off down the road with his new {object(0)}.</p>
         <p>{person(1)} looks at the piece of paper. It was a map of the inside of the castle! Just what they need to find Taco in such a huge building.</p>
         <p><img src="/images/map.jpg" alt="Map" className="map map--small" /></p>
-        <p>“Great, we don't want to get lost inside the castle! But oh, it'll be dark, so we won't be able to read the map in there.” said {person(0)}, sadly.</p>
+        <p>“Great, we don't want to get lost inside the castle! But oh, it'll be dark, so we won't be able to read the map in there.” says {person(0)}, sadly.</p>
       </div>
     ,
       <div>
-        <p>“I know, we can use this!” said {person(2)}, pulling a small robot ball out of a pocket. “We can programme it where to go, then follow its light in the dark castle corridors.”</p>
-        <p>“Brilliant idea!” said {person(0)}.</p>
+        <p>“I know, we can use this!” says {person(2)}, pulling a small robot ball out of a pocket. “We can programme it where to go, then follow its light in the dark castle corridors.”</p>
+        <p>“Brilliant idea!” says {person(0)}.</p>
       </div>
     ,
       <div>

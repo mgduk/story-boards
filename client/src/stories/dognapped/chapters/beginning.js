@@ -36,19 +36,19 @@ export default class Beginning extends Chapter {
     ,
       <div>
         <p>A giant bird with bright green feathers lands softly next to them.</p>
-        <p>The goo dribbles down into {person(2)}'s mouth. {person(2)}'s expression turns from disgust to delight — “mmm, carrot cake,” {person(2)} said, now happily licking the cake off. “The bird must have been eating it and dropped some.”</p>
+        <p>The goo dribbles down into {person(2)}'s mouth. {person(2)}'s expression turns from disgust to delight — “mmm, carrot cake,” says {person(2)}, now happily licking the cake off. “The bird must have been eating it and dropped some.”</p>
         <p>Around the neck of the giant green bird there was a rolled up piece of paper tied with string.</p>
       </div>
     ,
       <div>
         <p>{person(1)} takes the paper and unties it. “It's a note!” exclaims {person(1)}.</p>
         <p><img src="/images/note-from-taco.png" className="note-from-taco" alt="Note" /></p>
-        <p>“Someone's in trouble!” said {person(0)}. “Someone called ‘Taco’ who signed their note with a paw print.”</p>
+        <p>“Someone's in trouble!” says {person(0)}. “Someone called ‘Taco’ who signed their note with a paw print.”</p>
       </div>
     ,
       <div>
         <p>The green bird ducks down, seemingly urging them to climb on.</p>
-        <p>“Maybe this bird will take us to the castle” said {person(0)}. The three friends climb carefully onto its feathery back.</p>
+        <p>“Maybe this bird will take us to the castle” says {person(0)}. The three friends climb carefully onto its feathery back.</p>
         <p>“Wait a moment!” cries {person(1)}, “I nearly forgot my {object(0)}.” {person(1)} swiftly jumps down, picks up the {object(0)}, and clambers back on.</p>
         <p>With two powerful beats of its wings, the giant bird took off into the air with the {friendCount} friends holding tightly onto its feathers.</p>
       </div>
