@@ -1,5 +1,5 @@
 {
-  "name": "story-board",
+  "name": "story-boards",
   "version": "1.0.0",
   "description": "Interactive Storytelling with Trello",
   "private": true,
@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/mgduk_atlassian/brightwell-story.git"
+    "url": "git+ssh://git@bitbucket.org/mgduk_atlassian/story-boards.git"
   },
   "author": "Matt Dolan <mdolan@atlassian.com>",
-  "homepage": "https://bitbucket.org/mgduk_atlassian/brightwell-story#readme",
+  "homepage": "https://bitbucket.org/mgduk_atlassian/story-boards#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
