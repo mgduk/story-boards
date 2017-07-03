@@ -18,7 +18,10 @@ export default class Introduction extends Chapter {
             <li>To add pictures use your iPhone, iPad or Android device's camera then use the ‘Add Card to Trello’ sharing option on the photo. You'll need to have the free <a href="https://trello.com/platforms">Trello mobile app</a> installed.</li>
             <li>Alternatively, <a href="https://ifttt.com/do_camera">IFTTT's camera widget</a> makes it even easier to add a photo. It takes a bit of setting up, but it makes adding photos really fast — especially helpful if you're telling the story with a group.</li>
             <li>If your places/object/activity ideas don't work in the story, just rename the cards at any time!</li>
-            {!isTouchDevice && <li>Press <code>f</code> on your keyboard to go fullscreen, and the right arrow to move to the next page.</li>}
+            {isTouchDevice
+              ? <li>Swipe to go to the next page</li>
+              : <li>Press <code>f</code> on your keyboard to go fullscreen, and the right arrow to move to the next page.</li>
+            }
             <li>Read the story in a slightly hammy dramatic voice. And don't worry if you cry a little bit.</li>
           </ul>
         </div>
