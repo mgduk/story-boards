@@ -503,7 +503,7 @@ class App extends Component {
         if (!silent) {
           this.trello.post(
             `/1/cards/${this.chaptersCard.id}/actions/comments`, {
-              text: err.message
+              text: `@${this.state.username}: ${err.message}`
           });
         }
         return false;
