@@ -2,6 +2,7 @@ import _ from 'lodash';
 import converter from 'number-to-words';
 import capitalize from 'capitalize';
 import lcfirst from 'lcfirst';
+import joinn from 'joinn';
 
 export default function(app) {
   const coinImageUrl = 'https://cdn.glitch.com/59eb59af-6a74-424b-b78d-47a120942668%2Fcoin.jpg?1498515332815';
@@ -41,7 +42,13 @@ export default function(app) {
           // fly to castle
           // see things on the way (combining contributed activities/objects/famous people)
           name: 'flight',
-          title: 'Flight'
+          title: 'Flight',
+          canView: () => {
+            const deficient = ['places', 'activities', 'objects', 'foods'].filter(name => app.state[name].length < 3);
+            if (deficient.length > 1) {
+              throw new Error(`We need at least three ${joinn(deficient)} for the story. Add your ideas on cards to ${deficient.length === 1 ? 'that list' : 'those lists'}.`);
+            }
+          }
         },
         {
           // a dragon guards the bridge to the castle
