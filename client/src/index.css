@@ -286,11 +286,15 @@ code {
   font-size: 1.33em;
   padding: 0.2em 0.5em;
 }
-button.page-change:hover {
+button.page-change:not(.page-change--disabled):hover {
   background: #026AA7;
   border-color: #298FCA;
   border-bottom-color: #055A8C;
   color: #fff;
+}
+.page-change.page-change--disabled {
+  color: #222;
+  cursor: default;
 }
 .pageNumber {
   font-size: 0.6em;

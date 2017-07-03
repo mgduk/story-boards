@@ -697,10 +697,7 @@ class App extends Component {
       }
       {this.state.pageCount > 1 &&
         <nav className="pagination">
-          {this.state.page > 0
-            ? <button className="page-change page-change--prev icon-arrow-left2" onClick={() => this.movePage(-1)} title="Go to previous page"></button>
-            : <span className="page-change page-change--prev"></span>
-          }
+          <button className={`page-change page-change--prev icon-arrow-left2 ${this.state.page == 0 ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(-1)} title="Go to previous page"></button>
           <div className="pageNumber">
             <div>{this.story.config.title} chapter {this.state.chapter+1} ‘{chapter.title}’</div>
             <div>page {this.state.page+1} of {this.state.pageCount}</div>
@@ -709,10 +706,7 @@ class App extends Component {
               <button className="subtle-link" onClick={this.reset.bind(this)}>Save my place and sign out</button>
             </div>
           </div>
-          {this.state.pageCount > this.state.page+1 && this.canViewPage(this.state.page+1)
-            ? <button className="page-change page-change--next icon-arrow-right2" onClick={() => this.movePage(1)} title="Go to next page"></button>
-            : <span className="page-change page-change--next"></span>
-          }
+          <button className={`page-change page-change--next icon-arrow-right2 ${this.state.pageCount <= this.state.page+1 || !this.canViewPage(this.state.page+1) ? 'page-change--disabled' : ''}`} onClick={() => this.movePage(1)} title="Go to next page"></button>
         </nav>
       }
     </div>
