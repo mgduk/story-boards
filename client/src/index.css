@@ -167,6 +167,7 @@ a:hover {
 select {
   font-family: 'Pangolin', sans-serif;
   font-size: 1em;
+  max-width: 100%;
 }
 
 code {
@@ -555,6 +556,10 @@ button.page-change:not(.page-change--disabled):hover {
 
 
 @media only screen and (max-width: 645px) {
+  body {
+    font-size: 25px;
+  }
+
   .pagination {
     flex-wrap: wrap;
     margin-top: 2em;
