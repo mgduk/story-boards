@@ -221,7 +221,10 @@ class App extends Component {
   }
 
   catchPollingError(err) {
-    if (err.message === 'board not found') {
+    if (err.message === 'TypeError: Failed to fetch') {
+      // just ignore, probably due to the browser being in the background
+    }
+    else if (err.message === 'board not found') {
       this.setState({ error: "I can't see that board. Please check that you've added @storybot and that the URL is correct." });
     } else if (/unauthorized permission requested/.test(err.message)) {
       this.setState({ message: 'Please add ‘storybot’ as a member of your board' });
@@ -261,10 +264,7 @@ class App extends Component {
       this.parseCards(board.cards);
       this.parseLabels(board.labels);
     })
-    .catch((err) => {
-      console.log(err);
-      throw new Error('Unable to load board')
-    });
+    .catch(this.catchPollingError.bind(this));
   }
 
   parseLists(listData) {
