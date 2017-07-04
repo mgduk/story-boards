@@ -72,12 +72,7 @@ class App extends Component {
     this.firstLoad = true;
 
     window.addEventListener('keydown', this.onWindowKeyDown.bind(this));
-    window.addEventListener('click', (ev) => {
-      if (ev.target.tagName === 'A' && ev.target.href) {
-        ev.preventDefault();
-        window.open(ev.target.href);
-      }
-    });
+    window.addEventListener('click', this.onWindowClick.bind(this));
 
     this.hammertime = new Hammer(document.documentElement);
     this.hammertime.on('swipe', this.onSwipe.bind(this));
@@ -111,6 +106,28 @@ class App extends Component {
     this.setBoardId(board.id)
     this.setState({ board: board });
     return board;
+  }
+
+  onWindowClick(ev) {
+    if (ev.target.tagName === 'A' && ev.target.href) {
+      ev.preventDefault();
+      window.open(ev.target.href);
+      return;
+    }
+    if (ev.target.classList.contains('chapter-title')) {
+      ev.target.style.display = 'none';
+      return;
+    }
+
+    let parent;
+    const parents = [];
+    while (parent = (parent || ev.target).parentNode) {
+      parents.push(parent);
+    }
+    if (parents.find(el => el.classList != null && el.classList.contains('hint--trello'))) {
+      ev.preventDefault();
+      window.open(this.state.board.url);
+    }
   }
 
   onWindowKeyDown(ev) {

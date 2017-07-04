@@ -266,6 +266,10 @@ code {
   background-position-x: 0.5em;
   padding: 0.87em 3.33em 0.66em;
   min-height: 1.46em;
+  cursor: pointer;
+}
+.hint.hint--trello:hover {
+  background-color: #0079BF;
 }
 
 .hint.hint--highlight {
