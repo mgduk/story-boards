@@ -16,7 +16,7 @@ export default class Beginning extends Chapter {
           having a great time <span className="highlight">{this.getOne('activities', 0)}</span>.
         </p>
         <p>{person(1)} had just been given <span className="highlight">{object(0, true)}</span> as a birthday present and had brought it along.</p>
-        <p>After a while the {friendCount} of them got tired and stopped to eat some <span className="highlight">{this.getOne('foods', 0)}</span>.</p>
+        <p>After a while the {friendCount} of them get tired and stop to eat some <span className="highlight">{this.getOne('foods', 0)}</span>.</p>
         {ideasNeeded().length > 0 &&
           <div className="hint hint--trello">
             <p>We need your ideas! Add three {joinn(ideasNeeded())} as cards to the board.</p>
@@ -30,14 +30,14 @@ export default class Beginning extends Chapter {
           <div>
             <p>Suddenly, {person(0)} hears a noise. “Up there!” shouts {person(1)}, spotting something.</p>
             <p>The {friendCount} friends look up.</p>
-            <p>Unfortunately for {person(2)}, at that very moment something was falling from the sky and landed—splat!—on {person(2)}'s face!</p>
+            <p>Unfortunately for {person(2)}, at that very moment something is falling from the sky and lands—splat!—on {person(2)}'s face!</p>
           </div>
       }
     ,
       <div>
-        <p>A giant bird with bright green feathers lands softly next to them.</p>
+        <p>A giant bird with bright green feathers alights softly next to them.</p>
         <p>The goo dribbles down into {person(2)}'s mouth. {person(2)}'s expression turns from disgust to delight — “mmm, carrot cake,” says {person(2)}, now happily licking the cake off. “The bird must have been eating it and dropped some.”</p>
-        <p>Around the neck of the giant green bird there was a rolled up piece of paper tied with string.</p>
+        <p>Around the neck of the giant green bird is a rolled up piece of paper tied with string.</p>
       </div>
     ,
       <div>
