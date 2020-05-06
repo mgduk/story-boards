@@ -11,7 +11,9 @@
     "start": "concurrently \"npm run start-server\" \"cd client && npm start\"",
     "start-server": "node server/src/index.js",
     "test": "mocha test/",
-    "postinstall": "cd client && npm i && npm run build"
+    "postinstall": "cd client && npm i && npm run build",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -26,9 +28,11 @@
     "express": "^4.15.3",
     "lodash": "^4.17.4",
     "node-trello": "^1.2.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "snyk": "^1.319.0"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"
-  }
+  },
+  "snyk": true
 }
